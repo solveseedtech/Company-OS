@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Engineering Portal | Solve Seeds Technologies</title>
+  <meta name="description" content="Solve Seeds Technologies Client Engineering Portal. Track live sprint milestones, Git commits, staging links, and transparent invoices.">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/grid.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let r of registrations) { r.unregister(); }
+      });
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Sticky Top Navigation Bar -->
+  <header class="site-header">
+    <div class="container-wide nav-wrapper">
+      <a href="index.html" class="brand-link" id="navBrandLogo">
+        <div class="brand-mark">SS</div>
+        <div class="brand-title">
+          <span>SOLVE SEEDS</span>
+          <span class="brand-tag">CLIENT PORTAL</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="modules.html" class="nav-link">Modular Catalog</a></li>
+          <li><a href="sandboxes.html" class="nav-link">Live Sandboxes</a></li>
+          <li><a href="configure.html" class="nav-link">Fixed Pricing</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="index.html" class="btn btn-secondary btn-sm">
+          Return to Studio Home →
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section-py">
+    <div class="container-narrow">
+      
+      <!-- STATE 1: Clean SSO / Magic Link Login Screen -->
+      <section id="portalLoginSection">
+        <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 40px; margin-top: 24px;">
+          <div style="text-align: center; margin-bottom: 28px;">
+            <h1 style="font-size: 1.85rem; font-weight: 700; margin-top: 0; margin-bottom: 8px;">Solve Seeds Client Staging Portal</h1>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); max-width: 50ch; margin: 0 auto;">
+              Active clients log in here to inspect live sprint commits, review automated staging builds, and download IP transfer agreements.
+            </p>
+          </div>
+
+          <form onsubmit="handleLoginSubmit(event)" style="max-width: 420px; margin: 0 auto;">
+            <div class="input-field-group">
+              <label class="input-label" for="portalEmail">Authorized Founder / Client Work Email</label>
+              <input type="email" id="portalEmail" class="text-input" placeholder="founder@acmecorp.com" value="founder@acmecorp.com" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-bottom: 14px;">
+              Send Instant Magic Link →
+            </button>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+              <span style="font-size: 0.75rem; color: var(--text-mono); text-transform: uppercase;">— Or Quick Inspect as Prospective Buyer —</span>
+            </div>
+
+            <button type="button" class="btn btn-secondary" style="width: 100%; padding: 12px;" onclick="handleLoginSubmit()">
+              👁️ Preview Live Client Workspace Demo (Acme SaaS - Sprint 2)
+            </button>
+          </form>
+
+          <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: space-around; font-size: 0.78rem; color: var(--text-secondary);">
+            <span>🔒 Okta / SAML 2.0 Supported</span>
+            <span>⚡ Automated Git CI/CD Sync</span>
+            <span>📄 IP Handover Audit Trail</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATE 2: Live Client Workspace Dashboard -->
+      <section id="portalDashboardSection" style="display: none;">
+        
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
+          <div>
+            <span class="mono-tag">WORKSPACE: ACME SAAS MVP // SPRINT 02 IN PROGRESS</span>
+            <h2 style="font-size: 1.5rem; font-weight: 700; margin-top: 2px;">Engineering Pod Dashboard</h2>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary btn-sm" onclick="simulateDeployStaging()">
+              ⚡ Trigger Staging Deploy
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="logoutPortal()">
+              Log Out
+            </button>
+          </div>
+        </div>
+
+        <div id="portalDeployAlert" style="display: none; background: #DCFCE7; border: 1px solid rgba(21,128,61,0.3); padding: 12px 16px; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.8rem; color: #15803D; margin-bottom: 20px;">
+        </div>
+
+        <!-- Sprint Progress Bar -->
+        <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 24px; margin-bottom: 24px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <strong style="font-size: 0.95rem;">Sprint Cadence: 4-Week Dedicated Track</strong>
+            <span class="mono-tag" style="color: var(--status-live);">65% SPRINT COMPLETED</span>
+          </div>
+          <div style="width: 100%; height: 8px; background: var(--bg-surface-subtle); border-radius: 2px; overflow: hidden; margin-bottom: 12px;">
+            <div style="width: 65%; height: 100%; background: var(--text-primary);"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary);">
+            <span>Week 1: Core Plumbing (Done)</span>
+            <span>Week 2: Custom Domain Logic (Active)</span>
+            <span>Week 3: Webhooks & AI</span>
+            <span>Week 4: IP Handover</span>
+          </div>
+        </div>
+
+        <!-- Staging Health Monitor -->
+        <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 24px; margin-bottom: 24px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <span class="mono-tag">STAGING ENVIRONMENT STATUS</span>
+            <span class="status-pill live"><span class="status-dot"></span> 200 OK (SSL VALID)</span>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 0.85rem; padding: 10px 14px; background: var(--bg-surface-subtle); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); display: flex; justify-content: space-between; margin-bottom: 14px;">
+            <span>URL: <strong>https://staging-acme.solveseeds.dev</strong></span>
+            <a href="sandboxes.html" style="color: var(--text-primary); text-decoration: underline;">Open Staging Instance ↗</a>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 0.8rem;">
+            <div style="border: 1px solid var(--border-hairline); padding: 10px; border-radius: var(--radius-sm);">
+              <span class="mono-tag">LATEST COMMIT</span>
+              <div style="font-weight: 600; margin-top: 2px;">#7f2a91 (Stripe Hook)</div>
+            </div>
+            <div style="border: 1px solid var(--border-hairline); padding: 10px; border-radius: var(--radius-sm);">
+              <span class="mono-tag">LATENCY (EDGE)</span>
+              <div style="font-weight: 600; margin-top: 2px;">18ms Global P90</div>
+            </div>
+            <div style="border: 1px solid var(--border-hairline); padding: 10px; border-radius: var(--radius-sm);">
+              <span class="mono-tag">CI/CD TESTS</span>
+              <div style="font-weight: 600; color: var(--status-live); margin-top: 2px;">42 / 42 Tests Passed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Git Commit Ledger -->
+        <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 24px; margin-bottom: 24px;">
+          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px;">Live Git Commit Audit Trail</h3>
+          <table class="editorial-table">
+            <thead>
+              <tr>
+                <th>Commit SHA</th>
+                <th>Engineering Pod Message</th>
+                <th>Author</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code style="font-family: var(--font-mono); font-size: 0.75rem;">7f2a91c</code></td>
+                <td>feat(billing): stripe webhook idempotency verified with Redis deduplication</td>
+                <td>Lead Architect</td>
+                <td><span class="status-pill live">Passed</span></td>
+              </tr>
+              <tr>
+                <td><code style="font-family: var(--font-mono); font-size: 0.75rem;">3a9018e</code></td>
+                <td>feat(tenancy): add PostgreSQL RLS policy for workspace audit logs</td>
+                <td>Senior Engineer</td>
+                <td><span class="status-pill live">Passed</span></td>
+              </tr>
+              <tr>
+                <td><code style="font-family: var(--font-mono); font-size: 0.75rem;">d84192b</code></td>
+                <td>refactor(auth): migrate magic links to strict expiration tokens</td>
+                <td>Security Pod</td>
+                <td><span class="status-pill live">Passed</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Sprint Invoices & IP Transfer Sign-Offs -->
+        <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 24px;">
+          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px;">Milestones & Transparent Fixed Invoicing</h3>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border-hairline); border-radius: var(--radius-sm);">
+              <div>
+                <strong>Milestone 1: Core Foundation & Tenant DB (50% Deposit)</strong>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Paid & Verified via Stripe B2B // IP Transfer Schedule Initiated</div>
+              </div>
+              <span class="status-pill live">✓ Paid ($9,400)</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border-hairline); border-radius: var(--radius-sm);">
+              <div>
+                <strong>Milestone 2: Custom Domain Logic & API Staging (30% Progress)</strong>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Due upon Client UAT Walkthrough Approval</div>
+              </div>
+              <span class="status-pill" style="color: var(--status-pending); background: var(--status-pending-bg);">Pending Sign-Off</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border-hairline); border-radius: var(--radius-sm);">
+              <div>
+                <strong>Milestone 3: Final Production Cutover & 100% Repository Handover (20%)</strong>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Due upon final GitHub admin transfer & cloud credentials release</div>
+              </div>
+              <span class="status-pill" style="color: var(--text-mono); background: var(--bg-surface-subtle);">Locked</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- #CEAB93 Architectural Mega-Footer -->
+  <footer class="site-footer">
+    <div class="container-wide">
+      <div class="footer-bottom-bar" style="border-top: none;">
+        <div>
+          © 2026 Solve Seeds Technologies. Client Engineering Portal.
+        </div>
+        <div>
+          <span>SOC2 Type II Audit Logging Enabled</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/portal.js"></script>
+</body>
+</html>

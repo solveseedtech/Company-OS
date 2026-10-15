@@ -1,0 +1,49 @@
+/* Solve Seeds Technologies - Color & Design Token Architecture */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Core Surfaces */
+  --bg-canvas: #FFFBE9;           /* Primary Body Background (Warm cream paper) */
+  --bg-surface-elevated: #FFFFFF; /* Interactive Cards, Configurator & UI Mockups */
+  --bg-surface-subtle: #F5EEDC;   /* Secondary Section Alternation & Table Headers */
+  --bg-footer: #CEAB93;           /* Footer & High-Impact Architectural Banner Surface */
+
+  /* Structural Grid & Borders (Microsoft/Rippling Editorial Look) */
+  --border-hairline: #E2D5BE;     /* 1px exposed grid lines across #FFFBE9 body */
+  --border-strong: #B8967E;       /* Active card borders and input outlines */
+  --border-footer: #B5927B;       /* 1px structural dividers inside #CEAB93 footer */
+
+  /* Typography (High contrast espresso on warm cream) */
+  --text-primary: #1C1917;        /* Deep Espresso Charcoal for Headings, Body & Footer */
+  --text-secondary: #57504A;      /* Muted Umber for subheadlines and descriptions */
+  --text-mono: #785A46;           /* Technical labels, SLA metrics, latency, sprint tags */
+  --text-muted: #8A7E75;          /* Tertiary timestamps and deactivated states */
+
+  /* Action & Conversion Accents */
+  --cta-primary-bg: #1C1917;      /* Solid Espresso button background */
+  --cta-primary-text: #FFFBE9;    /* Warm cream button text */
+  --cta-secondary-bg: #CEAB93;    /* Secondary buttons & active filter pills */
+  --status-live: #15803D;         /* Forest green for Production Ready / SLA badges */
+  --status-live-bg: #DCFCE7;      /* Subtle green tint background */
+  --status-pending: #B45309;      /* Muted amber for active sprint tasks */
+  --status-pending-bg: #FEF3C7;
+
+  /* Typography Families */
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+  --font-editorial: 'Instrument Serif', Georgia, serif;
+
+  /* Radii & Micro-Curves (Strict 0px to 6px) */
+  --radius-none: 0px;
+  --radius-sm: 3px;
+  --radius-md: 6px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease-out;
+  --transition-medium: 200ms ease-out;
+
+  /* Layout */
+  --nav-height: 64px;
+  --container-max: 1280px;
+}

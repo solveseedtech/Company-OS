@@ -1,0 +1,199 @@
+/* Solve Seeds Technologies - Exposed Hairline Grid & Architectural Layout */
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--bg-canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* Browser Surfaces: Selection, Caret, Scrollbar, Focus */
+::selection {
+  background-color: var(--text-primary);
+  color: var(--bg-canvas);
+}
+
+:focus-visible {
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+  border-left: 1px solid var(--border-hairline);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-none);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-mono);
+}
+
+/* Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.editorial-italic {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.mono-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Layout Containers */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.container-wide {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.container-narrow {
+  width: 100%;
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* Structural Exposed Hairline Grid Primitives */
+.border-b-hairline {
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.border-t-hairline {
+  border-top: 1px solid var(--border-hairline);
+}
+
+.border-l-hairline {
+  border-left: 1px solid var(--border-hairline);
+}
+
+.border-r-hairline {
+  border-right: 1px solid var(--border-hairline);
+}
+
+.border-all-hairline {
+  border: 1px solid var(--border-hairline);
+}
+
+/* Architectural Grid Cells (Microsoft Bento Style) */
+.grid-ledger-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background-color: var(--border-hairline);
+  gap: 1px;
+  border-top: 1px solid var(--border-hairline);
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.grid-ledger-4 > .ledger-cell {
+  background-color: var(--bg-canvas);
+  padding: 32px 28px;
+}
+
+.grid-ledger-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: var(--border-hairline);
+  gap: 1px;
+}
+
+.grid-ledger-3 > .ledger-cell {
+  background-color: var(--bg-surface-elevated);
+  padding: 28px;
+}
+
+.grid-ledger-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  background-color: var(--border-hairline);
+  gap: 1px;
+}
+
+.grid-ledger-2 > .ledger-cell {
+  background-color: var(--bg-surface-elevated);
+  padding: 32px;
+}
+
+/* Responsive Grid Breakpoints */
+@media (max-width: 1024px) {
+  .grid-ledger-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-ledger-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-ledger-4,
+  .grid-ledger-3,
+  .grid-ledger-2 {
+    grid-template-columns: 1fr;
+  }
+  .grid-ledger-4 > .ledger-cell,
+  .grid-ledger-3 > .ledger-cell,
+  .grid-ledger-2 > .ledger-cell {
+    padding: 20px;
+  }
+}

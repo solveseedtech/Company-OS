@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Playable Sandboxes | Solve Seeds Technologies</title>
+  <meta name="description" content="Test-drive 3 real production SaaS applications. Inspect database schema ERDs, simulated webhooks, and live latency benchmarks.">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/grid.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let r of registrations) { r.unregister(); }
+      });
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Sticky Top Navigation Bar -->
+  <header class="site-header">
+    <div class="container-wide nav-wrapper">
+      <a href="index.html" class="brand-link" id="navBrandLogo">
+        <div class="brand-mark">SS</div>
+        <div class="brand-title">
+          <span>SOLVE SEEDS</span>
+          <span class="brand-tag">SAAS VENTURE STUDIO</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="modules.html" class="nav-link">Modular Catalog</a></li>
+          <li><a href="sandboxes.html" class="nav-link active">Live Sandboxes</a></li>
+          <li><a href="index.html#solutions" class="nav-link">Solutions & SLAs</a></li>
+          <li><a href="configure.html" class="nav-link">Fixed Pricing</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="portal.html" class="portal-link">
+          <span class="status-dot" style="background-color: var(--status-live);"></span> Client Portal
+        </a>
+        <a href="configure.html" class="btn btn-primary">
+          Scope Your SaaS →
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section-py">
+    <div class="container">
+      
+      <!-- Sandboxes Header -->
+      <div class="section-header" style="max-width: 840px;">
+        <h1 class="section-title">Live Playable Sandboxes</h1>
+        <p class="section-desc">
+          Eliminate trust friction before committing. Toggle between live in-browser application state, PostgreSQL 16 relational schemas with Row-Level Security, and verified edge API latency benchmarks.
+        </p>
+      </div>
+
+      <!-- Sandbox Interactive Card Container -->
+      <div class="sandbox-card-container" id="sandboxContainer">
+        
+        <!-- App Switcher & View Switcher Bar -->
+        <div class="sandbox-nav-bar">
+          <div class="sandbox-app-switcher">
+            <button class="sandbox-app-btn active" data-app="fintech" onclick="switchSandboxApp('fintech')">
+              01 // B2B FinTech & Subscriptions
+            </button>
+            <button class="sandbox-app-btn" data-app="erp" onclick="switchSandboxApp('erp')">
+              02 // Operations & Inventory ERP
+            </button>
+            <button class="sandbox-app-btn" data-app="ai" onclick="switchSandboxApp('ai')">
+              03 // AI Wrapper & Vector RAG
+            </button>
+          </div>
+
+          <!-- 3-Way View Toggle -->
+          <div class="view-mode-toggle">
+            <button class="view-mode-btn active" data-view="preview" onclick="switchSandboxView('preview')">
+              [ LIVE APP PREVIEW ]
+            </button>
+            <button class="view-mode-btn" data-view="schema" onclick="switchSandboxView('schema')">
+              [ DATABASE SCHEMA (ERD) ]
+            </button>
+            <button class="view-mode-btn" data-view="benchmarks" onclick="switchSandboxView('benchmarks')">
+              [ API & LATENCY BENCHMARKS ]
+            </button>
+          </div>
+        </div>
+
+        <!-- Demo Credentials / Session Context Bar -->
+        <div class="sandbox-demo-credentials" id="sandboxDemoUser">
+          <!-- Injected via js/sandboxes.js -->
+        </div>
+
+        <!-- Sandbox Body Content Area -->
+        <div class="sandbox-body-area" id="sandboxBodyArea">
+          <!-- Injected via js/sandboxes.js -->
+        </div>
+
+      </div>
+
+      <!-- Trust Metrics Below Sandboxes -->
+      <div class="grid-ledger-3" style="margin-top: 32px; border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); overflow: hidden;">
+        <div class="ledger-cell" style="background: var(--bg-surface-elevated);">
+          <div class="spec-label">SECURITY VERIFICATION</div>
+          <h4 style="font-size: 1rem; font-weight: 700; margin-top: 4px; margin-bottom: 4px;">Row-Level Security (RLS)</h4>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">Every SQL query is cryptographically bound to the authenticated user's organization UUID.</p>
+        </div>
+        <div class="ledger-cell" style="background: var(--bg-surface-elevated);">
+          <div class="spec-label">IDEMPOTENCY GUARANTEE</div>
+          <h4 style="font-size: 1rem; font-weight: 700; margin-top: 4px; margin-bottom: 4px;">Webhook Deduplication</h4>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">Stripe and Razorpay billing events process exactly once via distributed Redis lockouts.</p>
+        </div>
+        <div class="ledger-cell" style="background: var(--bg-surface-elevated);">
+          <div class="spec-label">DISASTER RECOVERY</div>
+          <h4 style="font-size: 1rem; font-weight: 700; margin-top: 4px; margin-bottom: 4px;">Automated Point-in-Time</h4>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">Continuous PostgreSQL WAL archiving guarantees recovery to any microsecond in the last 30 days.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Sticky Bottom Persistent Selection Tray -->
+  <aside class="selection-tray" id="stickySelectionTray">
+    <div class="container-wide tray-content">
+      <div class="tray-info">
+        <div class="tray-count">3 Custom Modules Selected</div>
+        <div class="tray-delivery">Estimated Deployment: ~4 Weeks [Fixed Sprint]</div>
+      </div>
+      <div>
+        <a href="configure.html" class="tray-btn">
+          Generate Architecture Blueprint →
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- #CEAB93 Architectural Mega-Footer -->
+  <footer class="site-footer">
+    <div class="container-wide">
+      <div class="footer-banner-row">
+        <div>
+          <h2 class="footer-banner-title">
+            Like what you see in the sandboxes? Let's engineer your exact solution.
+          </h2>
+        </div>
+        <div>
+          <a href="configure.html" class="btn btn-primary btn-lg" style="background-color: #1C1917; color: #FFFBE9; border: 1px solid #1C1917;">
+            Start Scoping Your Build →
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-ledger-grid">
+        <div class="footer-col">
+          <div class="brand-title" style="margin-bottom: 12px;">
+            <span>SOLVE SEEDS</span>
+            <span class="brand-tag" style="background: rgba(28,25,23,0.08); border-color: rgba(28,25,23,0.15);">STUDIO</span>
+          </div>
+          <p style="font-size: 0.85rem; color: #3A2F27; line-height: 1.5; margin-bottom: 16px;">
+            On-Demand SaaS Product Studio engineering production applications for venture founders and enterprise engineering teams.
+          </p>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #4A3C33;">
+            Direct: <a href="mailto:founder@solveseeds.com" style="color: #1C1917; font-weight: 600;">founder@solveseeds.com</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-header">Pre-Built Core</div>
+          <ul class="footer-links-list">
+            <li><a href="modules.html">Multi-Tenant Auth & RBAC</a></li>
+            <li><a href="modules.html">Global Subscription Billing</a></li>
+            <li><a href="modules.html">Row-Level Security (RLS)</a></li>
+            <li><a href="modules.html">Immutable Audit Logs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-header">Solutions</div>
+          <ul class="footer-links-list">
+            <li><a href="configure.html">For Non-Technical Founders</a></li>
+            <li><a href="configure.html">For Seed & Series A Startups</a></li>
+            <li><a href="configure.html">Internal Enterprise Portals</a></li>
+            <li><a href="sandboxes.html">Live Production Sandboxes</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-header">Engineering</div>
+          <ul class="footer-links-list">
+            <li><a href="blueprint.html">System Architecture Specs</a></li>
+            <li><a href="sandboxes.html">PostgreSQL Schema ERDs</a></li>
+            <li><a href="portal.html">100% Day 1 IP Transfer</a></li>
+            <li><a href="configure.html">SLA & Uptime Guarantees</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          © 2026 Solve Seeds Technologies. All rights reserved. 100% clean source-code ownership guaranteed.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/modules-data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/sandboxes.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const app = urlParams.get('app');
+      if (app && typeof switchSandboxApp === 'function') {
+        switchSandboxApp(app);
+      }
+    });
+  </script>
+</body>
+</html>
