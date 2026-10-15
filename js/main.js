@@ -132,7 +132,7 @@
       const name = nameInput ? nameInput.value.trim() : 'Executive';
       const email = emailInput ? emailInput.value.trim() : '';
       const domain = domainInput ? domainInput.value : 'Enterprise Platform';
-      const timeline = timelineInput ? timelineInput.value : '21–35 Days';
+      const timeline = timelineInput ? timelineInput.value : '5–7 Days';
 
       // Button loading state
       const origText = submitBtn.innerHTML;

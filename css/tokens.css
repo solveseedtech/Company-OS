@@ -12,12 +12,16 @@
   --surface:          #FFFFFF;
   --surface-warm:     #F8F1DE;
   --surface-subtle:   #F3EBD6;
-  --footer:           #CEAB93;
+  --footer:           #AD8B73;
+  --footer-ink:       #FFFFFF;
+  --footer-sub:       rgba(255, 255, 255, 0.85);
+  --footer-faint:     rgba(255, 255, 255, 0.6);
 
-  /* ── Structural Grid (1px solid continuous frame) ── */
+  /* ── Structural Rules ── */
   --rule:             #DED3BC;
+  --rule-subtle:      #E8DEC9;
   --rule-strong:      #A88F79;
-  --rule-footer:      #B5927B;
+  --rule-footer:      rgba(255, 255, 255, 0.18);
 
   /* ── Ink (Editorial Charcoal on Warm Cream) ── */
   --ink:              #1A1714;
