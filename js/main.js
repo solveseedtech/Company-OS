@@ -1,18 +1,19 @@
 /**
  * Solve Seeds Technologies — Flagship Architecture Engine
  * Handcrafted vanilla JavaScript:
- * 1. IntersectionObserver scroll reveal engine
- * 2. Sticky navigation active section tracking
- * 3. Smooth offset anchor scrolling
- * 4. Executive Intake Form submission & SLA validation
+ * 1. Fluid Scroll Reveal Motion Engine (smooth viewport entry)
+ * 2. Circular Motion Architectural Ledger Controller (interactive scrub & pause)
+ * 3. Sticky navigation active section tracking
+ * 4. Smooth offset anchor scrolling
+ * 5. Executive Intake Form submission & SLA validation
  */
 
 (function () {
   'use strict';
 
-  // ── 1. Scroll Reveal Engine ────────────────────────────────
+  // ── 1. Fluid Scroll Reveal Engine ───────────────────────────
   function initScrollReveal() {
-    const reveals = document.querySelectorAll('.reveal');
+    const reveals = document.querySelectorAll('.reveal, .reveal-group');
     if (!reveals.length) return;
 
     if (!('IntersectionObserver' in window)) {
@@ -21,17 +22,16 @@
     }
 
     const observer = new IntersectionObserver(
-      (entries, obs) => {
+      (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            obs.unobserve(entry.target);
           }
         });
       },
       {
-        threshold: 0.08,
-        rootMargin: '0px 0px -30px 0px'
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px'
       }
     );
 
@@ -45,7 +45,17 @@
     });
   }
 
-  // ── 2. Active Navigation Tracking ──────────────────────────
+  // ── 2. Automated Circular Motion Ledger Lifecycle ───────────
+  function initCircularMotion() {
+    const track = document.getElementById('circularTrack');
+    if (!track) return;
+
+    // Pause on keyboard focus for full accessibility (WCAG 2.2.2)
+    track.addEventListener('focusin', () => track.classList.add('is-paused'));
+    track.addEventListener('focusout', () => track.classList.remove('is-paused'));
+  }
+
+  // ── 3. Active Navigation Tracking ───────────────────────────
   function initActiveNav() {
     const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
     if (!navLinks.length) return;
@@ -86,7 +96,7 @@
     sections.forEach(sec => navObserver.observe(sec));
   }
 
-  // ── 3. Smooth Offset Anchor Scrolling ──────────────────────
+  // ── 4. Smooth Offset Anchor Scrolling ───────────────────────
   function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
@@ -110,7 +120,7 @@
     });
   }
 
-  // ── 4. Executive Architecture Intake Form ──────────────────
+  // ── 5. Executive Architecture Intake Form ───────────────────
   function initIntakeForm() {
     const form = document.getElementById('intakeForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -131,7 +141,6 @@
       const domain = domainInput ? domainInput.value : 'Enterprise Platform';
       const timeline = timelineInput ? timelineInput.value : '5–7 Days';
 
-      // Button loading state
       const origText = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.innerHTML = 'Submitting Scope to Architecture Pod&hellip;';
@@ -161,14 +170,14 @@
     });
   }
 
-  // ── Helper ─────────────────────────────────────────────────
+  // ── Helper ──────────────────────────────────────────────────
   function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
   }
 
-  // ── DOM Ready ──────────────────────────────────────────────
+  // ── DOM Ready Boot ──────────────────────────────────────────
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
@@ -177,6 +186,7 @@
 
   function boot() {
     initScrollReveal();
+    initCircularMotion();
     initActiveNav();
     initSmoothScroll();
     initIntakeForm();
