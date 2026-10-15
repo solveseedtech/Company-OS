@@ -27,7 +27,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Browser Surfaces: Selection, Caret, Scrollbar, Focus */
+/* Browser Surfaces */
 ::selection {
   background-color: var(--text-primary);
   color: var(--bg-canvas);
@@ -53,10 +53,6 @@ body {
   border-radius: var(--radius-none);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-mono);
-}
-
 /* Typography Hierarchy */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
@@ -75,125 +71,177 @@ h1, h2, h3, h4, h5, h6 {
 
 .mono-tag {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-mono);
   font-variant-numeric: tabular-nums;
+  line-height: 1.35;
 }
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-/* Layout Containers */
-.container {
+/* Container & Continuous Structural Frame */
+.container-frame {
   width: 100%;
   max-width: var(--container-max);
   margin-left: auto;
   margin-right: auto;
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
-.container-wide {
-  width: 100%;
-  max-width: 1440px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
-.container-narrow {
-  width: 100%;
-  max-width: 960px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
-/* Structural Exposed Hairline Grid Primitives */
-.border-b-hairline {
-  border-bottom: 1px solid var(--border-hairline);
-}
-
-.border-t-hairline {
-  border-top: 1px solid var(--border-hairline);
-}
-
-.border-l-hairline {
   border-left: 1px solid var(--border-hairline);
-}
-
-.border-r-hairline {
   border-right: 1px solid var(--border-hairline);
+  background-color: var(--bg-canvas);
 }
 
-.border-all-hairline {
-  border: 1px solid var(--border-hairline);
-}
-
-/* Architectural Grid Cells (Microsoft Bento Style) */
-.grid-ledger-4 {
+/* Continuous 2-Column Editorial Section (Sticky Left Index 01..05) */
+.editorial-section {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  background-color: var(--border-hairline);
-  gap: 1px;
-  border-top: 1px solid var(--border-hairline);
+  grid-template-columns: 280px 1fr;
+  border-bottom: 1px solid var(--border-hairline);
+  background-color: var(--bg-canvas);
+}
+
+.sticky-index-col {
+  position: sticky;
+  top: calc(var(--nav-height) + 20px);
+  align-self: start;
+  padding: 44px 32px 44px 24px;
+  border-right: 1px solid var(--border-hairline);
+  background-color: var(--bg-canvas);
+}
+
+.index-num-display {
+  font-family: var(--font-mono);
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  color: var(--text-mono);
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.index-meta-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--arch-tag-text);
+  background-color: var(--arch-tag-bg);
+  border: 1px solid var(--border-hairline);
+  padding: 3px 7px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  line-height: 1.35;
+}
+
+.index-col-title {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+
+.index-col-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.editorial-content-col {
+  min-width: 0;
+  background-color: var(--bg-canvas);
+}
+
+/* Shared Border Grid Systems (Zero floating gap cards) */
+.grid-edge-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   border-bottom: 1px solid var(--border-hairline);
 }
 
-.grid-ledger-4 > .ledger-cell {
-  background-color: var(--bg-canvas);
-  padding: 32px 28px;
-}
-
-.grid-ledger-3 {
+.grid-edge-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background-color: var(--border-hairline);
-  gap: 1px;
+  border-bottom: 1px solid var(--border-hairline);
 }
 
-.grid-ledger-3 > .ledger-cell {
-  background-color: var(--bg-surface-elevated);
-  padding: 28px;
-}
-
-.grid-ledger-2 {
+.grid-edge-4 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  background-color: var(--border-hairline);
-  gap: 1px;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--border-hairline);
 }
 
-.grid-ledger-2 > .ledger-cell {
-  background-color: var(--bg-surface-elevated);
-  padding: 32px;
+.edge-cell {
+  padding: 32px 28px;
+  border-right: 1px solid var(--border-hairline);
+  background-color: var(--bg-canvas);
+  transition: background-color var(--transition-fast);
 }
 
-/* Responsive Grid Breakpoints */
-@media (max-width: 1024px) {
-  .grid-ledger-4 {
+.edge-cell:last-child {
+  border-right: none;
+}
+
+.edge-cell:hover {
+  background-color: #FAF4E1;
+}
+
+/* Responsive Grid Adaptations */
+@media (max-width: 1080px) {
+  .editorial-section {
+    grid-template-columns: 240px 1fr;
+  }
+  .grid-edge-4 {
     grid-template-columns: repeat(2, 1fr);
   }
-  .grid-ledger-3 {
-    grid-template-columns: repeat(2, 1fr);
+  .grid-edge-4 .edge-cell:nth-child(2) {
+    border-right: none;
   }
-}
-
-@media (max-width: 640px) {
-  .grid-ledger-4,
-  .grid-ledger-3,
-  .grid-ledger-2 {
+  .grid-edge-4 .edge-cell:nth-child(-n+2) {
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .grid-edge-3 {
     grid-template-columns: 1fr;
   }
-  .grid-ledger-4 > .ledger-cell,
-  .grid-ledger-3 > .ledger-cell,
-  .grid-ledger-2 > .ledger-cell {
-    padding: 20px;
+  .grid-edge-3 .edge-cell {
+    border-right: none;
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .grid-edge-3 .edge-cell:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .container-frame {
+    border-left: none;
+    border-right: none;
+  }
+  .editorial-section {
+    grid-template-columns: 1fr;
+  }
+  .sticky-index-col {
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--border-hairline);
+    padding: 24px;
+    background-color: var(--bg-surface-subtle);
+  }
+  .grid-edge-2, .grid-edge-4 {
+    grid-template-columns: 1fr;
+  }
+  .grid-edge-2 .edge-cell, .grid-edge-4 .edge-cell {
+    border-right: none;
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .grid-edge-2 .edge-cell:last-child, .grid-edge-4 .edge-cell:last-child {
+    border-bottom: none;
   }
 }
