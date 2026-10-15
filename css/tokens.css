@@ -1,65 +1,64 @@
-/* Solve Seeds Technologies — Design Token Architecture
-   Typography: Newsreader (headlines) + Fraunces (section titles) + General Sans (body) + JetBrains Mono (technical)
-   Canvas: #FFFBE9 warm linen  |  Footer: #CEAB93 architectural grounding
-   Grid: 1px solid #DED3BC continuous structural frame */
+/* Solve Seeds Technologies — Design Tokens
+   Strict 2-Font System:
+   - Newsreader (Regular 400/500, optical size): Editorial headlines & manifesto quotation
+   - General Sans (Indian Type Foundry): 100% body, UI, labels, tables, navigation
+   Canvas: #FFFBE9 (Warm Linen) | Footer: #CEAB93 (Architectural Grounding)
+   Zero code editor fonts, zero AI-generator tropes */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,600&family=JetBrains+Mono:wght@400;500;600;700&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap');
 @import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
 
 :root {
   /* ── Canvas & Surfaces ── */
   --canvas:           #FFFBE9;
   --surface:          #FFFFFF;
-  --surface-warm:     #F8F1DE;
-  --surface-subtle:   #F3EBD6;
-  --footer:           #AD8B73;
-  --footer-ink:       #FFFFFF;
-  --footer-sub:       rgba(255, 255, 255, 0.85);
-  --footer-faint:     rgba(255, 255, 255, 0.6);
+  --surface-warm:     #F8F2E2;
+  --surface-subtle:   #F2E8D2;
 
-  /* ── Structural Rules ── */
+  /* ── Mega-Footer (#CEAB93 Restored with Deep Espresso Ink) ── */
+  --footer:           #CEAB93;
+  --footer-ink:       #1C1917;
+  --footer-secondary: #4A3E36;
+  --footer-faint:     #6E5F53;
+  --rule-footer:      #B5927B;
+
+  /* ── Structural Grid Lines ── */
   --rule:             #DED3BC;
   --rule-subtle:      #E8DEC9;
   --rule-strong:      #A88F79;
-  --rule-footer:      rgba(255, 255, 255, 0.18);
 
-  /* ── Ink (Editorial Charcoal on Warm Cream) ── */
-  --ink:              #1A1714;
-  --ink-secondary:    #544D46;
-  --ink-tertiary:     #7A7168;
-  --ink-faint:        #9C948C;
-  --ink-mono:         #6B5B4E;
+  /* ── Ink (Crisp Editorial Charcoal) ── */
+  --ink:              #1C1917;
+  --ink-secondary:    #524B43;
+  --ink-tertiary:     #786F66;
+  --ink-faint:        #9E948A;
 
-  /* ── Architectural Accents (No neon, no glow) ── */
+  /* ── Architectural Accents (Restrained, no neon) ── */
   --accent:           #2E5A44;
-  --accent-bg:        #E8F0EA;
-  --tag-bg:           #ECE3CF;
+  --accent-bg:        #EBF1EC;
+  --tag-bg:           #EFE6D4;
   --tag-ink:          #4A3E36;
   --warn-ink:         #8B2500;
   --warn-bg:          #FCEAE3;
 
-  /* ── Action ── */
-  --cta-bg:           #1A1714;
+  /* ── CTA Action ── */
+  --cta-bg:           #1C1917;
   --cta-ink:          #FFFBE9;
 
-  /* ── Typography Ramp ── */
-  --font-headline:    'Newsreader', 'Libre Caslon Text', Georgia, 'Times New Roman', serif;
-  --font-display:     'Fraunces', 'Newsreader', Georgia, serif;
-  --font-body:        'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-mono:        'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
-  --surface-active:   #EFE7D2;
+  /* ── Strictly 2 Fonts (No JetBrains Mono, No Fraunces) ── */
+  --font-serif:       'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-sans:        'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  /* ── Micro Radii (strict 0–4px) ── */
+  /* ── Micro Radii (0–4px strictly) ── */
   --r-none: 0;
   --r-xs:   2px;
   --r-sm:   4px;
 
-  /* ── Motion ── */
-  --ease:    cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --speed:   180ms;
+  /* ── Transitions ── */
+  --ease:   cubic-bezier(0.16, 1, 0.3, 1);
+  --speed:  180ms;
 
-  /* ── Layout ── */
-  --nav-h:   64px;
-  --max-w:   1320px;
-  --gutter:  clamp(20px, 3vw, 36px);
+  /* ── Dimensions ── */
+  --nav-h:  64px;
+  --max-w:  1200px;
 }

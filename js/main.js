@@ -1,11 +1,10 @@
 /**
  * Solve Seeds Technologies — Flagship Architecture Engine
- * Pure handcrafted vanilla JavaScript:
+ * Handcrafted vanilla JavaScript:
  * 1. IntersectionObserver scroll reveal engine
  * 2. Sticky navigation active section tracking
  * 3. Smooth offset anchor scrolling
- * 4. Executive Intake Form submission & SLA validation docket
- * 5. Interactive Docket telemetry
+ * 4. Executive Intake Form submission & SLA validation
  */
 
 (function () {
@@ -37,7 +36,6 @@
     );
 
     reveals.forEach(el => {
-      // If already in viewport on load, reveal immediately
       const rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
         el.classList.add('visible');
@@ -105,7 +103,6 @@
             behavior: 'smooth'
           });
 
-          // Focus management for accessibility
           targetEl.setAttribute('tabindex', '-1');
           targetEl.focus({ preventScroll: true });
         }
@@ -143,13 +140,13 @@
         statusBox.style.display = 'block';
         statusBox.innerHTML = `
           <div class="intake-status-box" role="status" aria-live="polite">
-            <div class="intake-status-tag">[ ARCHITECTURE SPEC RECEIVED &bull; SLA: 24-HOUR RESPONSE ]</div>
-            <h4 class="intake-status-title">Direct Evaluation Scheduled with Senior Architect</h4>
+            <div class="intake-status-tag">SPECIFICATION RECEIVED &bull; 24-HOUR ARCHITECT SLA</div>
+            <div class="intake-status-title">Direct Evaluation Scheduled with Senior Architect</div>
             <div class="intake-status-body">
-              <p>Thank you, <strong>${escapeHtml(name)}</strong>. Your architecture submission for <strong>${escapeHtml(domain)}</strong> (${escapeHtml(timeline)}) has been assigned to our senior engineering pod.</p>
-              <p style="margin-top:8px">A Lead Architect will review your requirements and provide an initial sovereign architecture blueprint directly to <strong>${escapeHtml(email)}</strong> within 24 hours.</p>
-              <div style="margin-top:12px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-mono);">
-                DOCKET ID: SST-${Date.now().toString(36).toUpperCase()} &bull; ZERO HOURLY SURCHARGES &bull; 100% SOVEREIGN IP HANDOVER
+              <p>Thank you, <strong>${escapeHtml(name)}</strong>. Your architecture submission for <strong>${escapeHtml(domain)}</strong> (${escapeHtml(timeline)}) has been routed to our senior engineering pod.</p>
+              <p style="margin-top:8px">A Principal Architect will review your platform requirements and respond with an initial technical blueprint to <strong>${escapeHtml(email)}</strong> within 24 hours.</p>
+              <div style="margin-top:12px; font-size: 0.74rem; font-weight: 600; color: var(--ink-secondary); letter-spacing: 0.04em;">
+                SLA REFERENCE: SST-${Date.now().toString(36).toUpperCase()} &bull; ZERO CHANGE-ORDER SURCHARGES &bull; 100% SOVEREIGN IP HANDOVER
               </div>
             </div>
           </div>
@@ -159,34 +156,9 @@
         submitBtn.disabled = false;
         submitBtn.innerHTML = origText;
 
-        // Smooth scroll status into view if needed
         statusBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 550);
+      }, 500);
     });
-  }
-
-  // ── 5. Work Order Docket Interactive State ─────────────────
-  function initDocketInteractions() {
-    const docket = document.querySelector('.docket');
-    if (!docket) return;
-
-    const serialEl = docket.querySelector('.docket-serial');
-    if (serialEl) {
-      serialEl.title = 'Click to copy Engagement Docket Reference';
-      serialEl.style.cursor = 'pointer';
-      serialEl.addEventListener('click', () => {
-        const text = serialEl.textContent.trim();
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(text).then(() => {
-            const prev = serialEl.textContent;
-            serialEl.textContent = 'COPIED TO CLIPBOARD';
-            setTimeout(() => {
-              serialEl.textContent = prev;
-            }, 1800);
-          });
-        }
-      });
-    }
   }
 
   // ── Helper ─────────────────────────────────────────────────
@@ -196,7 +168,7 @@
     return div.innerHTML;
   }
 
-  // ── DOM Ready Bootstrapper ─────────────────────────────────
+  // ── DOM Ready ──────────────────────────────────────────────
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
@@ -208,6 +180,5 @@
     initActiveNav();
     initSmoothScroll();
     initIntakeForm();
-    initDocketInteractions();
   }
 })();
