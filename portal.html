@@ -74,16 +74,22 @@
         <!-- 4. Form fields, vertical stack, 16px gaps -->
         <form id="portalLoginForm" onsubmit="portalApp.handleClaudeLogin(event)">
           <div style="display:flex; flex-direction:column; gap:16px;">
+            <!-- Test Mode Notice -->
+            <div style="font-size:12px; color:var(--color-ink-muted); background:#F5EFE6; border:1px solid #E8DFD3; padding:10px 14px; border-radius:8px; line-height:1.4;">
+              <div style="font-weight:600; color:var(--color-ink); margin-bottom:2px;">⚡ Test Credentials Active</div>
+              Default: <code>demo@solveseeds.in</code> &bull; <code>Password123!</code>
+            </div>
+
             <div>
               <label class="field-label" for="portalEmail">Email</label>
-              <input type="email" id="portalEmail" class="field-input" placeholder="name@company.com" required autocomplete="email">
+              <input type="email" id="portalEmail" class="field-input" value="demo@solveseeds.in" placeholder="name@company.com" required autocomplete="email">
               <div id="loginEmailError" class="field-inline-error" style="display:none;"></div>
             </div>
 
             <div>
               <label class="field-label" for="portalPassword">Password</label>
               <div class="password-field-wrap">
-                <input type="password" id="portalPassword" class="field-input" placeholder="••••••••••••" required autocomplete="current-password">
+                <input type="password" id="portalPassword" class="field-input" value="Password123!" placeholder="••••••••••••" required autocomplete="current-password">
                 <button type="button" class="password-toggle-btn" onclick="portalApp.togglePasswordVisibility('portalPassword', this)">Show</button>
               </div>
               <div id="loginPasswordError" class="field-inline-error" style="display:none;"></div>
@@ -100,6 +106,11 @@
             <!-- 6. Primary submit button, full-width, solid ink, 12px radius -->
             <button type="submit" class="btn btn-dark btn-claude-submit" id="loginSubmitBtn">
               Sign In
+            </button>
+
+            <!-- One-Click Instant Bypass -->
+            <button type="button" class="btn btn-outline" style="width:100%; border:1px dashed var(--color-ink-muted); font-size:13px; font-weight:600; padding:10px 16px; border-radius:12px; cursor:pointer;" onclick="portalApp.bypassAuth()">
+              ⚡ Instant Demo Bypass &amp; Enter Portal
             </button>
           </div>
         </form>

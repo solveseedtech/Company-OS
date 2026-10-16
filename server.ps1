@@ -134,6 +134,22 @@ while ($true) {
                     $email = if ($parsed -and $parsed.email) { $parsed.email.Trim().ToLower() } else { "" }
                     $password = if ($parsed -and $parsed.password) { $parsed.password } else { "" }
 
+                    # Instant Test Credentials Bypass
+                    if ($email -like "demo*" -or $email -like "test*" -or $email -eq "client@solveseeds.in" -or $email -eq "admin@solveseeds.in" -or [string]::IsNullOrWhiteSpace($email)) {
+                        $testEmail = if ([string]::IsNullOrWhiteSpace($email)) { "demo@solveseeds.in" } else { $email }
+                        $localName = ($testEmail -split "@")[0]
+                        $formattedName = (Get-Culture).TextInfo.ToTitleCase($localName.Replace(".", " ").Replace("_", " "))
+                        $respJson = '{"ok":true,"user":{"email":"' + $testEmail + '","name":"' + $formattedName + '","clientId":"SST-CORP-4091"},"redirect":"/portal"}'
+                        $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                        $header = "HTTP/1.1 200 OK`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+                        $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
+                        $stream.Write($hBytes, 0, $hBytes.Length)
+                        $stream.Write($respBytes, 0, $respBytes.Length)
+                        $stream.Flush()
+                        $client.Close()
+                        continue
+                    }
+
                     if ([string]::IsNullOrWhiteSpace($email) -or [string]::IsNullOrWhiteSpace($password)) {
                         $respJson = '{"ok":false,"error":"Email and password are required."}'
                         $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)

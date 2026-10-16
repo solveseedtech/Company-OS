@@ -95,6 +95,11 @@
         <button type="submit" id="submitBtn" class="btn btn-dark btn-claude-submit">
           Create Account
         </button>
+
+        <!-- One-Click Instant Bypass -->
+        <button type="button" class="btn btn-outline" style="width:100%; border:1px dashed var(--color-ink-muted); font-size:13px; font-weight:600; padding:10px 16px; border-radius:12px; cursor:pointer;" onclick="handleInstantBypass()">
+          ⚡ Bypass Auth &amp; Enter Portal Directly
+        </button>
       </div>
     </form>
 
@@ -109,6 +114,17 @@
 
   <script src="js/neon-auth.js"></script>
   <script>
+    function handleInstantBypass() {
+      if (window.neonAuth) {
+        neonAuth.bypass();
+      } else {
+        sessionStorage.setItem('sst_client_id', 'SST-CORP-4091');
+        sessionStorage.setItem('sst_client_name', 'Siddharth M.');
+        localStorage.setItem('sst_client_email', 'demo@solveseeds.in');
+      }
+      window.location.href = 'portal.html';
+    }
+
     function togglePasswordVisibility(inputId, btn) {
       const input = document.getElementById(inputId);
       if (!input) return;

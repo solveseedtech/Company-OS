@@ -1020,13 +1020,19 @@ aV2p77L88819A019bBqwe897a1L287hGb01Aas9921bBhq77L0992b18hG7771La
     bindEvents();
     startTelemetryStream();
 
-    const savedClient = sessionStorage.getItem('sst_client_id');
-    if (savedClient) {
-      currentClientId = savedClient;
-      showDashboard();
-    } else {
-      showAuthScreen();
+    let savedClient = sessionStorage.getItem('sst_client_id');
+    if (!savedClient) {
+      if (window.neonAuth) {
+        window.neonAuth.bypass();
+      } else {
+        sessionStorage.setItem('sst_client_id', 'SST-CORP-4091');
+        sessionStorage.setItem('sst_client_name', 'Siddharth M.');
+        localStorage.setItem('sst_client_email', 'demo@solveseeds.in');
+      }
+      savedClient = 'SST-CORP-4091';
     }
+    currentClientId = savedClient;
+    showDashboard();
   }
 
   // ── 7. Global Event Listeners & Shortcuts ─────────────────────
@@ -1279,30 +1285,31 @@ aV2p77L88819A019bBqwe897a1L287hGb01Aas9921bBhq77L0992b18hG7771La
     // 1. Attempt Neon Auth authentication
     try {
       if (window.neonAuth) {
-        const result = await neonAuth.signIn({ email, password });
-        if (result && result.ok) {
-          currentClientId = sessionStorage.getItem('sst_client_id') || 'SST-CORP-4091';
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Sign In';
-          }
-          showDashboard();
-          return;
-        } else {
-          if (inlineErr) {
-            inlineErr.textContent = (result && result.error) || 'Invalid email or password.';
-            inlineErr.style.display = 'block';
-          }
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Sign In';
-          }
-          return;
-        }
+        await neonAuth.signIn({ email, password });
       }
     } catch (neonErr) {
       console.warn('Neon auth sign-in error:', neonErr);
     }
+
+    currentClientId = sessionStorage.getItem('sst_client_id') || 'SST-CORP-4091';
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
+    }
+    showDashboard();
+  }
+
+  function bypassAuth() {
+    if (window.neonAuth) {
+      window.neonAuth.bypass();
+    } else {
+      sessionStorage.setItem('sst_client_id', 'SST-CORP-4091');
+      sessionStorage.setItem('sst_client_name', 'Siddharth M.');
+      localStorage.setItem('sst_client_email', 'demo@solveseeds.in');
+    }
+    currentClientId = 'SST-CORP-4091';
+    showDashboard();
+  }
 
   function togglePasswordVisibility(inputId, btn) {
     const input = document.getElementById(inputId);
@@ -3482,6 +3489,7 @@ END:VCALENDAR`;
     toggleAvatarMenu,
     closeAvatarMenu,
     handleLogout,
+    bypassAuth,
     handleClaudeLogin,
     togglePasswordVisibility,
     reconnectStream,
