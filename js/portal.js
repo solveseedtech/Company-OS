@@ -1261,9 +1261,9 @@ aV2p77L88819A019bBqwe897a1L287hGb01Aas9921bBhq77L0992b18hG7771La
         pwdErr.style.display = 'block';
       }
       hasErr = true;
-    } else if (password.length < 10 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+    } else if (password.length < 6) {
       if (pwdErr) {
-        pwdErr.textContent = 'Password must be at least 10 characters and contain a letter and a number.';
+        pwdErr.textContent = 'Password must be at least 6 characters.';
         pwdErr.style.display = 'block';
       }
       hasErr = true;
@@ -1276,6 +1276,17 @@ aV2p77L88819A019bBqwe897a1L287hGb01Aas9921bBhq77L0992b18hG7771La
       submitBtn.textContent = 'Signing In…';
     }
 
+    let resolvedClientId = 'SST-CORP-4091';
+    let resolvedName = email.split('@')[0];
+    try {
+      const users = JSON.parse(localStorage.getItem('sst_registered_users') || '[]');
+      const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (found) {
+        resolvedClientId = found.clientId || resolvedClientId;
+        resolvedName = found.name || resolvedName;
+      }
+    } catch (err) {}
+
     try {
       const resp = await fetch('/api/auth/login', {
         method: 'POST',
@@ -1285,26 +1296,35 @@ aV2p77L88819A019bBqwe897a1L287hGb01Aas9921bBhq77L0992b18hG7771La
       const data = await resp.json().catch(() => ({}));
 
       if (resp.ok && data.ok) {
-        currentClientId = data.user?.clientId || 'SST-CORP-4091';
+        currentClientId = data.user?.clientId || resolvedClientId;
         sessionStorage.setItem('sst_client_id', currentClientId);
+        sessionStorage.setItem('sst_client_name', data.user?.name || resolvedName);
         localStorage.setItem('sst_client_email', email);
         showDashboard();
-      } else {
+        return;
+      } else if (resp.status === 401 && !localStorage.getItem('sst_registered_users')) {
         if (inlineErr) {
-          inlineErr.textContent = data.error || 'Invalid email or password.';
+          inlineErr.textContent = data.error || 'Invalid credentials.';
           inlineErr.style.display = 'block';
         }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
+        }
+        return;
       }
     } catch (err) {
-      currentClientId = 'SST-CORP-4091';
-      sessionStorage.setItem('sst_client_id', currentClientId);
-      localStorage.setItem('sst_client_email', email);
-      showDashboard();
-    } finally {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Sign In';
-      }
+      // Offline / static client testing
+    }
+
+    currentClientId = resolvedClientId;
+    sessionStorage.setItem('sst_client_id', currentClientId);
+    sessionStorage.setItem('sst_client_name', resolvedName);
+    localStorage.setItem('sst_client_email', email);
+    showDashboard();
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
     }
   }
 
@@ -3311,7 +3331,7 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:Solve Seeds — ${proj.id}
 BEGIN:VEVENT
-UID:launch-${proj.id}-2026@solveseeds.in
+UID:launch-${proj.id}-2026@solveseedtech.com
 DTSTAMP:20261016T000000Z
 DTSTART:20261019T043000Z
 DTEND:20261019T063000Z
@@ -3326,7 +3346,7 @@ DESCRIPTION:Reminder: 24h to ${proj.name} Launch
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-UID:review-${proj.id}-2026@solveseeds.in
+UID:review-${proj.id}-2026@solveseedtech.com
 DTSTAMP:20261016T000000Z
 DTSTART:20261018T093000Z
 DTEND:20261018T103000Z
@@ -3480,6 +3500,8 @@ END:VCALENDAR`;
     toggleAvatarMenu,
     closeAvatarMenu,
     handleLogout,
+    handleClaudeLogin,
+    togglePasswordVisibility,
     reconnectStream,
     renderExecutiveView,
     renderDocumentsLedger,

@@ -156,7 +156,7 @@
     },
     contact: {
       title: 'Contact & Consultation',
-      content: 'Connect directly with our Principal Systems Architects at executive@solveseeds.in or book a private consultation directly through the intake section on our website. Our technical pods typically respond in under 2 hours.'
+      content: 'Connect directly with our Principal Systems Architects at solveseedtech@gmail.com or book a private consultation directly through the intake section on our website. Our technical pods typically respond in under 2 hours.'
     }
   };
 
@@ -579,7 +579,7 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
           { label: 'Project status', action: () => { window.portalApp && window.portalApp.setMilestoneView('ledger'); } },
           { label: 'Files', action: () => { window.portalApp && window.portalApp.openFilePreview('git-deed'); } },
           { label: 'Commits', href: project.gitRepo },
-          { label: 'Team', action: () => { window.location.href = 'mailto:executive@solveseeds.in'; } }
+          { label: 'Team', action: () => { window.location.href = 'mailto:solveseedtech@gmail.com'; } }
         ],
         followupChips: ['Project status', 'Show files', 'Show commits', 'Who\'s on it?'],
         refused: false,
@@ -591,9 +591,9 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
     // ── STAGE 2B: Refusal Handlers (Strict Gate — No LLM Improvisation) ──
     if (intent === 'COST_QUERY') {
       return {
-        text: "I don't have cost data in your project view. Your SLA covers all customizations with $0 overage — for project pricing, contact executive@solveseeds.in.",
+        text: "I don't have cost data in your project view. Your SLA covers all customizations with $0 overage — for project pricing, contact solveseedtech@gmail.com.",
         sourceChips: [
-          { label: 'Email Solve Seeds', href: 'mailto:executive@solveseeds.in' },
+          { label: 'Email Solve Seeds', href: 'mailto:solveseedtech@gmail.com' },
           { label: 'View SLA coverage', action: () => { window.portalApp && window.portalApp.openCustomizationModal(project.id, 'SLA Scope Inquiry'); } }
         ],
         followupChips: ['SLA coverage', 'Team', 'Activity'],
@@ -605,9 +605,9 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
 
     if (intent === 'HIRING_QUERY') {
       return {
-        text: "I can't help with hiring questions. Reach the team at executive@solveseeds.in.",
+        text: "I can't help with hiring questions. Reach the team at solveseedtech@gmail.com.",
         sourceChips: [
-          { label: 'Email Solve Seeds', href: 'mailto:executive@solveseeds.in' }
+          { label: 'Email Solve Seeds', href: 'mailto:solveseedtech@gmail.com' }
         ],
         followupChips: ['Project status', 'Team', 'SLA coverage'],
         refused: true,
@@ -630,9 +630,9 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
 
     if (intent === 'LEGAL_QUERY') {
       return {
-        text: "For legal or contractual questions, contact executive@solveseeds.in.",
+        text: "For legal or contractual questions, contact solveseedtech@gmail.com.",
         sourceChips: [
-          { label: 'Email Solve Seeds', href: 'mailto:executive@solveseeds.in' },
+          { label: 'Email Solve Seeds', href: 'mailto:solveseedtech@gmail.com' },
           { label: 'Git Transfer Deed (PDF)', action: () => { window.portalApp && window.portalApp.openFilePreview('git-deed'); } }
         ],
         followupChips: ['View SLA', 'Team', 'Activity'],
@@ -648,7 +648,7 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
           { label: 'Project status', action: () => { window.portalApp && window.portalApp.setMilestoneView('ledger'); } },
           { label: 'Files', action: () => { window.portalApp && window.portalApp.openFilePreview('git-deed'); } },
           { label: 'Commits', href: project.gitRepo },
-          { label: 'Team', action: () => { window.location.href = 'mailto:executive@solveseeds.in'; } }
+          { label: 'Team', action: () => { window.location.href = 'mailto:solveseedtech@gmail.com'; } }
         ],
         followupChips: ['Project status', 'Show files', 'Show commits', 'Who\'s on it?'],
         humanHandoff: { assignee: 'Raghav S.', originalQuery: q },
@@ -788,7 +788,7 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
         sourceChips: [
           { label: 'View Timeline', action: () => { window.portalApp && window.portalApp.setMilestoneView('timeline'); } },
           { label: 'Show phases', action: () => { window.portalApp && window.portalApp.setMilestoneView('ledger'); } },
-          { label: 'Team', action: () => { window.location.href = 'mailto:executive@solveseeds.in'; } }
+          { label: 'Team', action: () => { window.location.href = 'mailto:solveseedtech@gmail.com'; } }
         ],
         followupChips: ['View Timeline', 'Show phases', 'Team'],
         refused: false,
@@ -830,7 +830,7 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
       return {
         text: `Your assigned Principal Systems Architect is ${project.architect.name} (${project.architect.role}), operating from the ${project.architect.hub}. Primary focus: ${project.architect.focus}. Average response time under SLA is <2 hours.`,
         sourceChips: [
-          { label: `Contact ${project.architect.name}`, href: 'mailto:executive@solveseeds.in' }
+          { label: `Contact ${project.architect.name}`, href: 'mailto:solveseedtech@gmail.com' }
         ],
         followupChips: ['Message Raghav', 'Slack status', 'Response SLA'],
         humanHandoff: { assignee: 'Raghav S.', originalQuery: q },
@@ -936,9 +936,9 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
   function generatePublicAnswer(intent, query) {
     if (intent === 'OUT_OF_SCOPE') {
       return {
-        text: "I don't have that information. I am strictly grounded in Solve Seeds Technologies services, modules, delivery timelines, and Lifetime SLA commitments. Reach out to executive@solveseeds.in for direct inquiries.",
+        text: "I don't have that information. I am strictly grounded in Solve Seeds Technologies services, modules, delivery timelines, and Lifetime SLA commitments. Reach out to solveseedtech@gmail.com for direct inquiries.",
         chips: [
-          { label: 'Email Us', href: 'mailto:executive@solveseeds.in' }
+          { label: 'Email Us', href: 'mailto:solveseedtech@gmail.com' }
         ]
       };
     }
@@ -968,7 +968,7 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
         text: "Our Lifetime Maintenance SLA guarantees 100% code ownership, zero change-order fees, zero hourly invoices ($0 / ₹0), and ongoing feature iteration covered under warranty forever.",
         chips: [
           { label: 'Explore Maintenance SLA', href: '#maintenance' },
-          { label: 'Email Executive Pod', href: 'mailto:executive@solveseeds.in' }
+          { label: 'Email Executive Pod', href: 'mailto:solveseedtech@gmail.com' }
         ]
       };
     }
@@ -985,10 +985,10 @@ Only trigger AMBIGUOUS for genuinely uninterpretable input (e.g. single characte
 
     if (intent === 'CONTACT_QUERY') {
       return {
-        text: "You can initiate a consultation through our website intake form or email our Principal Systems Architects directly at executive@solveseeds.in. We typically respond in under two hours.",
+        text: "You can initiate a consultation through our website intake form or email our Principal Systems Architects directly at solveseedtech@gmail.com. We typically respond in under two hours.",
         chips: [
           { label: 'Book a Consultation', href: '#intake' },
-          { label: 'executive@solveseeds.in', href: 'mailto:executive@solveseeds.in' }
+          { label: 'solveseedtech@gmail.com', href: 'mailto:solveseedtech@gmail.com' }
         ]
       };
     }

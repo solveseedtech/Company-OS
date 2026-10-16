@@ -176,6 +176,7 @@
     const prevBtn = document.getElementById('showcasePrevBtn');
     const nextBtn = document.getElementById('showcaseNextBtn');
     const dots = document.querySelectorAll('#showcaseDots .showcase-dot');
+    const tabs = document.querySelectorAll('#showcaseNavTabs .showcase-tab-btn');
     const progressFill = document.getElementById('showcaseProgressFill');
     if (!container) return;
 
@@ -208,13 +209,17 @@
         dot.classList.toggle('active', idx === activeIdx);
       });
 
+      tabs.forEach((tab, idx) => {
+        tab.classList.toggle('active', idx === activeIdx);
+      });
+
       if (progressFill) {
         const maxScroll = container.scrollWidth - container.clientWidth;
         let pct;
         if (maxScroll <= 0) {
           pct = ((activeIdx + 1) / totalSlides) * 100;
         } else {
-          pct = Math.min(100, Math.max(16.66, (container.scrollLeft / maxScroll) * 100));
+          pct = Math.min(100, Math.max(16.66, ((activeIdx + 1) / totalSlides) * 100));
         }
         progressFill.style.width = pct + '%';
       }
@@ -224,7 +229,7 @@
       if (idx < 0 || idx >= totalSlides) return;
       const targetCard = cards[idx];
       if (targetCard) {
-        const targetLeft = targetCard.offsetLeft - container.offsetLeft - (window.innerWidth <= 640 ? 20 : 40);
+        const targetLeft = targetCard.offsetLeft - container.offsetLeft;
         container.scrollTo({
           left: Math.max(0, targetLeft),
           behavior: scrollBehavior
@@ -250,6 +255,12 @@
 
     dots.forEach((dot, idx) => {
       dot.addEventListener('click', () => {
+        scrollToSlide(idx);
+      });
+    });
+
+    tabs.forEach((tab, idx) => {
+      tab.addEventListener('click', () => {
         scrollToSlide(idx);
       });
     });

@@ -51,8 +51,8 @@
 
         <div>
           <label class="field-label" for="loginPassword">Password</label>
-          <div style="position:relative;">
-            <input type="password" id="loginPassword" class="field-input" placeholder="••••••••••••" required autocomplete="current-password" style="padding-right:54px;">
+          <div class="password-field-wrap">
+            <input type="password" id="loginPassword" class="field-input" placeholder="••••••••••••" required autocomplete="current-password">
             <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('loginPassword', this)">Show</button>
           </div>
           <div id="passwordError" class="field-inline-error" style="display:none;"></div>
@@ -123,8 +123,8 @@
         pwdErr.textContent = 'Password is required.';
         pwdErr.style.display = 'block';
         hasErr = true;
-      } else if (password.length < 10 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
-        pwdErr.textContent = 'Password must be at least 10 characters and contain a letter and a number.';
+      } else if (password.length < 6) {
+        pwdErr.textContent = 'Password must be at least 6 characters.';
         pwdErr.style.display = 'block';
         hasErr = true;
       }
@@ -133,6 +133,17 @@
 
       submitBtn.disabled = true;
       submitBtn.textContent = 'Signing In…';
+
+      let clientId = 'SST-CORP-4091';
+      let clientName = email.split('@')[0];
+      try {
+        const users = JSON.parse(localStorage.getItem('sst_registered_users') || '[]');
+        const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        if (found) {
+          clientId = found.clientId || clientId;
+          clientName = found.name || clientName;
+        }
+      } catch (err) {}
 
       try {
         const resp = await fetch('/api/auth/login', {
@@ -143,22 +154,26 @@
         const data = await resp.json().catch(() => ({}));
 
         if (resp.ok && data.ok) {
-          sessionStorage.setItem('sst_client_id', data.user?.clientId || 'SST-CORP-4091');
+          sessionStorage.setItem('sst_client_id', data.user?.clientId || clientId);
+          sessionStorage.setItem('sst_client_name', data.user?.name || clientName);
           localStorage.setItem('sst_client_email', email);
           window.location.href = 'portal.html';
-        } else {
-          inlineErr.textContent = data.error || 'Invalid email or password.';
+          return;
+        } else if (resp.status === 401 && !localStorage.getItem('sst_registered_users')) {
+          inlineErr.textContent = data.error || 'Invalid credentials.';
           inlineErr.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
+          return;
         }
       } catch (err) {
         // Fallback for static client testing
-        sessionStorage.setItem('sst_client_id', 'SST-CORP-4091');
-        localStorage.setItem('sst_client_email', email);
-        window.location.href = 'portal.html';
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Sign In';
       }
+
+      sessionStorage.setItem('sst_client_id', clientId);
+      sessionStorage.setItem('sst_client_name', clientName);
+      localStorage.setItem('sst_client_email', email);
+      window.location.href = 'portal.html';
     }
   </script>
 </body>

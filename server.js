@@ -153,7 +153,7 @@ Dispatched from Solve Seeds Sovereign Portal
 
       // Dispatch to internal contact destination (from env var only)
       console.log(`[EMAIL DISPATCH] To: ${SOLVESEEDS_CONTACT_EMAIL}`);
-      console.log(`From: noreply@solveseeds.in | Reply-To: ${email}`);
+      console.log(`From: solveseedtech@gmail.com | Reply-To: ${email}`);
       console.log(`Subject: ${emailSubject}`);
       console.log(emailBody);
 
