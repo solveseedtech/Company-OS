@@ -170,6 +170,105 @@
     });
   }
 
+  // ── 6. Product Showcase Carousel (Task 6) ──────────────────
+  function initProductShowcase() {
+    const container = document.getElementById('showcaseScrollContainer');
+    const prevBtn = document.getElementById('showcasePrevBtn');
+    const nextBtn = document.getElementById('showcaseNextBtn');
+    const dots = document.querySelectorAll('#showcaseDots .showcase-dot');
+    const progressFill = document.getElementById('showcaseProgressFill');
+    if (!container) return;
+
+    const cards = container.querySelectorAll('.showcase-slide-card');
+    const totalSlides = cards.length;
+    if (!totalSlides) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const scrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+
+    function getActiveIndex() {
+      const scrollLeft = container.scrollLeft;
+      let activeIdx = 0;
+      let minDiff = Infinity;
+      cards.forEach((card, idx) => {
+        const cardOffset = card.offsetLeft - container.offsetLeft;
+        const diff = Math.abs(cardOffset - scrollLeft);
+        if (diff < minDiff) {
+          minDiff = diff;
+          activeIdx = idx;
+        }
+      });
+      return activeIdx;
+    }
+
+    function updateCarouselState() {
+      const activeIdx = getActiveIndex();
+
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === activeIdx);
+      });
+
+      if (progressFill) {
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        let pct;
+        if (maxScroll <= 0) {
+          pct = ((activeIdx + 1) / totalSlides) * 100;
+        } else {
+          pct = Math.min(100, Math.max(16.66, (container.scrollLeft / maxScroll) * 100));
+        }
+        progressFill.style.width = pct + '%';
+      }
+    }
+
+    function scrollToSlide(idx) {
+      if (idx < 0 || idx >= totalSlides) return;
+      const targetCard = cards[idx];
+      if (targetCard) {
+        const targetLeft = targetCard.offsetLeft - container.offsetLeft - (window.innerWidth <= 640 ? 20 : 40);
+        container.scrollTo({
+          left: Math.max(0, targetLeft),
+          behavior: scrollBehavior
+        });
+      }
+    }
+
+    container.addEventListener('scroll', updateCarouselState, { passive: true });
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        const currentIdx = getActiveIndex();
+        scrollToSlide(Math.max(0, currentIdx - 1));
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        const currentIdx = getActiveIndex();
+        scrollToSlide(Math.min(totalSlides - 1, currentIdx + 1));
+      });
+    }
+
+    dots.forEach((dot, idx) => {
+      dot.addEventListener('click', () => {
+        scrollToSlide(idx);
+      });
+    });
+
+    container.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const currentIdx = getActiveIndex();
+        scrollToSlide(Math.max(0, currentIdx - 1));
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const currentIdx = getActiveIndex();
+        scrollToSlide(Math.min(totalSlides - 1, currentIdx + 1));
+      }
+    });
+
+    updateCarouselState();
+  }
+
   // ── Helper ──────────────────────────────────────────────────
   function escapeHtml(str) {
     const div = document.createElement('div');
@@ -190,5 +289,6 @@
     initActiveNav();
     initSmoothScroll();
     initIntakeForm();
+    initProductShowcase();
   }
 })();

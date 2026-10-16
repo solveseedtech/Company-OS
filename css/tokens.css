@@ -10,10 +10,22 @@
 
 :root {
   /* ── Canvas & Surfaces ── */
-  --canvas:           #FFFBE9;
-  --surface:          #FFFFFF;
-  --surface-warm:     #F8F2E2;
-  --surface-subtle:   #F2E8D2;
+  --canvas:              #FDFBF7;
+  --surface:             #FFFFFF;
+  --surface-warm:        #F8F2E2;
+  --surface-subtle:      #F2E8D2;
+
+  /* ── Editorial Restraint Tokens (Stripe / Linear / Vercel standard) ── */
+  --color-canvas:        #FDFBF7;
+  --color-surface:       #FFFFFF;
+  --color-surface-muted: #F5F1E8;   /* sidebar background, meta strips */
+  --color-ink:           #14110C;
+  --color-ink-muted:     #6B6559;
+  --color-hairline:      rgba(20, 17, 12, 0.08);
+  --color-hairline-strong: rgba(20, 17, 12, 0.16);
+  --color-success:       #3E7A4E;
+  --color-warn:          #B8791F;
+  --color-danger:        #A63A2E;
 
   /* ── Mega-Footer (#CEAB93 Restored with Deep Espresso Ink) ── */
   --footer:           #CEAB93;
@@ -41,6 +53,16 @@
   --warn-ink:         #8B2500;
   --warn-bg:          #FCEAE3;
 
+  /* ── Status & Telemetry Tokens ── */
+  --status-active:    #9A641A;
+  --status-active-bg: #FBF3E6;
+  --status-done:      #2E5A44;
+  --status-done-bg:   #EBF1EC;
+  --status-pending:   #786F66;
+  --status-pending-bg:#F2E8D2;
+  --status-danger:    #A63A2E;
+  --status-danger-bg: #FCEAE3;
+
   /* ── CTA Action ── */
   --cta-bg:           #1C1917;
   --cta-ink:          #FFFBE9;
@@ -61,4 +83,20 @@
   /* ── Dimensions ── */
   --nav-h:  64px;
   --max-w:  1200px;
+}
+
+/* ── Global Interactive Standards (Focus, Hover, Active) ── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-ink) !important;
+  outline-offset: 2px !important;
+}
+
+button:active,
+.btn:active {
+  transform: translateY(1px);
 }

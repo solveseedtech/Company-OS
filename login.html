@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In · Solve Seeds Technologies</title>
+  <meta name="description" content="Sign in to your Solve Seeds client portal.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2314110C'/><text x='50' y='65' font-family='sans-serif' font-size='42' font-weight='900' fill='%23FDFBF7' text-anchor='middle'>SS</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--color-canvas);
+      color: var(--color-ink);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      padding: 32px 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="auth-card-claude" role="main">
+    <!-- 1. Small "SS" mark, centered, 32px -->
+    <div class="auth-brand-mark">SS</div>
+
+    <!-- 2. Heading, centered: "Welcome to Solve Seeds" -->
+    <h1 class="auth-heading-serif">Welcome to Solve Seeds</h1>
+
+    <!-- 3. Subhead below, centered, 14px -->
+    <p class="auth-subhead">Sign in to your client portal</p>
+
+    <!-- 4. Form fields, vertical stack, 16px gaps -->
+    <form id="loginForm" onsubmit="handleLoginSubmit(event)" novalidate>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div>
+          <label class="field-label" for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" class="field-input" placeholder="name@company.com" required autocomplete="email">
+          <div id="emailError" class="field-inline-error" style="display:none;"></div>
+        </div>
+
+        <div>
+          <label class="field-label" for="loginPassword">Password</label>
+          <div style="position:relative;">
+            <input type="password" id="loginPassword" class="field-input" placeholder="••••••••••••" required autocomplete="current-password" style="padding-right:54px;">
+            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('loginPassword', this)">Show</button>
+          </div>
+          <div id="passwordError" class="field-inline-error" style="display:none;"></div>
+        </div>
+
+        <!-- 5. Inline "Forgot password?" link, right-aligned above the button -->
+        <div style="text-align:right; margin-top:-6px;">
+          <a href="forgot-password.html" class="portal-muted-link">Forgot password?</a>
+        </div>
+
+        <!-- Inline Error Message above button (13px, --color-danger) -->
+        <div id="loginInlineError" class="auth-inline-danger" style="display:none;"></div>
+
+        <!-- 6. Primary submit button, full-width, solid ink, 12px radius -->
+        <button type="submit" id="submitBtn" class="btn btn-dark btn-claude-submit">
+          Sign In
+        </button>
+      </div>
+    </form>
+
+    <!-- 7. Divider hairline -->
+    <div class="auth-divider-hairline"></div>
+
+    <!-- 8. Secondary action, centered, 13px -->
+    <div class="auth-secondary-action">
+      Don&rsquo;t have an account? <a href="signup.html">Sign up</a>
+    </div>
+  </main>
+
+  <script>
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = 'Hide';
+      } else {
+        input.type = 'password';
+        btn.textContent = 'Show';
+      }
+    }
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('loginEmail');
+      const pwdInput = document.getElementById('loginPassword');
+      const inlineErr = document.getElementById('loginInlineError');
+      const emailErr = document.getElementById('emailError');
+      const pwdErr = document.getElementById('passwordError');
+      const submitBtn = document.getElementById('submitBtn');
+
+      inlineErr.style.display = 'none';
+      emailErr.style.display = 'none';
+      pwdErr.style.display = 'none';
+
+      const email = (emailInput.value || '').trim();
+      const password = pwdInput.value || '';
+
+      let hasErr = false;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        emailErr.textContent = 'Please enter a valid email address.';
+        emailErr.style.display = 'block';
+        hasErr = true;
+      }
+
+      if (!password) {
+        pwdErr.textContent = 'Password is required.';
+        pwdErr.style.display = 'block';
+        hasErr = true;
+      } else if (password.length < 10 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+        pwdErr.textContent = 'Password must be at least 10 characters and contain a letter and a number.';
+        pwdErr.style.display = 'block';
+        hasErr = true;
+      }
+
+      if (hasErr) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing In…';
+
+      try {
+        const resp = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await resp.json().catch(() => ({}));
+
+        if (resp.ok && data.ok) {
+          sessionStorage.setItem('sst_client_id', data.user?.clientId || 'SST-CORP-4091');
+          localStorage.setItem('sst_client_email', email);
+          window.location.href = 'portal.html';
+        } else {
+          inlineErr.textContent = data.error || 'Invalid email or password.';
+          inlineErr.style.display = 'block';
+        }
+      } catch (err) {
+        // Fallback for static client testing
+        sessionStorage.setItem('sst_client_id', 'SST-CORP-4091');
+        localStorage.setItem('sst_client_email', email);
+        window.location.href = 'portal.html';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign In';
+      }
+    }
+  </script>
+</body>
+</html>

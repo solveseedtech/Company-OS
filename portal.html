@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Portal &bull; Solve Seeds Technologies</title>
+  <meta name="description" content="Sovereign Client Staging & Live Progress Portal for Solve Seeds Technologies enterprise clients.">
+
+  <!-- Strictly 2 Fonts: Newsreader (32px display serif) + General Sans (11px section & 14px body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap">
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/grid.css">
+  <link rel="stylesheet" href="css/main.css">
+  
+  <!-- Progressive Web App (PWA) Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#FFFBE9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SolveSeeds">
+</head>
+<body class="portal-page">
+
+  <!-- ── Top Portal AppShell Navigation Bar (One clean line) ── -->
+  <!-- ── Top Portal AppShell Navigation Bar (Clean Minimal Editorial Header) ── -->
+  <header class="site-nav portal-shell-nav">
+    <div class="nav-inner portal-nav-inner">
+      <!-- Left: SS mark + Solve Seeds -->
+      <div class="portal-nav-left">
+        <a href="index.html" class="brand" title="Solve Seeds Technologies">
+          <div class="brand-icon" id="portalBrandLogo">SS</div>
+          <span class="brand-name" id="portalBrandName">Solve Seeds</span>
+        </a>
+      </div>
+
+      <!-- Center: Search input (with ⌘K hint) -->
+      <div class="portal-nav-center" id="portalNavCenter" style="display:none;">
+        <button type="button" class="portal-nav-search-btn" onclick="portalApp.openCommandPalette()" title="Search &amp; Commands (⌘K or /)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-ink-muted);"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span style="color:var(--color-ink-muted);">Search</span>
+          <kbd class="cmd-kbd">⌘K</kbd>
+        </button>
+      </div>
+
+      <!-- Right: Client ID text + Menu button -->
+      <div class="portal-nav-right" id="portalNavActions">
+        <!-- Injected dynamically by portal.js based on auth state -->
+        <a href="index.html" class="portal-nav-link">&larr; Back to Website</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Reconnecting Alert Banner (if stream disconnects) -->
+  <div class="portal-reconnecting-banner" id="streamReconnectBanner" style="display:none;">
+    <span>Live telemetry stream paused. Reconnecting&hellip;</span>
+    <button type="button" class="banner-retry-btn" onclick="portalApp.reconnectStream()">Retry Now</button>
+  </div>
+
+  <main class="portal-main-area">
+
+    <!-- ══════════════════════════════════════════
+         SCREEN 1: AUTHENTICATION (CLAUDE-INSPIRED)
+         Route: /login
+         ══════════════════════════════════════════ -->
+    <section id="authScreen" class="portal-auth-wrap">
+      <div class="auth-card-claude">
+        <!-- 1. Small "SS" mark, centered, 32px -->
+        <div class="auth-brand-mark">SS</div>
+
+        <!-- 2. Heading, centered: "Welcome to Solve Seeds" -->
+        <h1 class="auth-heading-serif">Welcome to Solve Seeds</h1>
+
+        <!-- 3. Subhead below, centered, 14px -->
+        <p class="auth-subhead">Sign in to your client portal</p>
+
+        <!-- 4. Form fields, vertical stack, 16px gaps -->
+        <form id="portalLoginForm" onsubmit="portalApp.handleClaudeLogin(event)">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div>
+              <label class="field-label" for="portalEmail">Email</label>
+              <input type="email" id="portalEmail" class="field-input" placeholder="name@company.com" required autocomplete="email">
+              <div id="loginEmailError" class="field-inline-error" style="display:none;"></div>
+            </div>
+
+            <div>
+              <label class="field-label" for="portalPassword">Password</label>
+              <div style="position:relative;">
+                <input type="password" id="portalPassword" class="field-input" placeholder="••••••••••••" required autocomplete="current-password" style="padding-right:54px;">
+                <button type="button" class="password-toggle-btn" onclick="portalApp.togglePasswordVisibility('portalPassword', this)">Show</button>
+              </div>
+              <div id="loginPasswordError" class="field-inline-error" style="display:none;"></div>
+            </div>
+
+            <!-- 5. Inline "Forgot password?" link, right-aligned above the button -->
+            <div style="text-align:right; margin-top:-6px;">
+              <a href="forgot-password.html" class="portal-muted-link" style="font-size:13px;">Forgot password?</a>
+            </div>
+
+            <!-- Inline error message above button (13px, --color-danger) -->
+            <div id="loginInlineError" class="auth-inline-danger" style="display:none;"></div>
+
+            <!-- 6. Primary submit button, full-width, solid ink, 12px radius -->
+            <button type="submit" class="btn btn-dark btn-claude-submit" id="loginSubmitBtn">
+              Sign In
+            </button>
+          </div>
+        </form>
+
+        <!-- 7. Divider hairline -->
+        <div class="auth-divider-hairline"></div>
+
+        <!-- 8. Secondary action, centered, 13px -->
+        <div class="auth-secondary-action">
+          Don&rsquo;t have an account? <a href="signup.html">Sign up</a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════
+         SCREEN 2: AUTHENTICATED APPSHELL (3 VIEWS)
+         ══════════════════════════════════════════ -->
+    <div id="trackerDashboard" class="portal-tracker-wrap" style="display:none;">
+
+      <!-- ──────────────────────────────────────────
+           VIEW 1: MULTI-PROJECT OVERVIEW GRID (ACTIVE PLATFORMS)
+           ────────────────────────────────────────── -->
+      <section id="viewOverview" class="portal-view-section" style="display:block;">
+        <div class="portal-view-header">
+          <div>
+            <span class="tier-section">ENTERPRISE PORTFOLIO &bull; <span id="overviewClientIdTag">SST-CORP-4091</span></span>
+            <h1 class="portal-display-title">Active Platforms</h1>
+            <p class="portal-view-desc">
+              Three production engineering platforms under active development and lifetime maintenance.
+            </p>
+          </div>
+        </div>
+
+        <!-- Portfolio Overview Grid -->
+        <div class="portal-projects-grid" id="projectsGrid">
+          <!-- Injected dynamically by portal.js with loading skeletons fallback -->
+        </div>
+      </section>
+
+
+      <!-- ──────────────────────────────────────────
+           VIEW 2: REFACTORED PROJECT DETAIL VIEW
+           (Option B: Actions Top-Right, Linear Balance, Single-Column Expansion)
+           ────────────────────────────────────────── -->
+      <section id="viewDetail" class="portal-view-section" style="display:none;">
+
+        <!-- Header Card: All inside ONE white card with hairline border -->
+        <div class="portal-card portal-header-card">
+          <!-- Top Row: Status (Left) | Action Buttons (Right) -->
+          <div class="header-top-row">
+            <div class="header-status-indicator">
+              <span id="headerStatusMeta">Day 9 of 14 &bull; On schedule</span>
+              <span class="header-live-chip" id="headerLiveChip">
+                <span class="live-dot-pulse"></span> <span id="headerLiveText">Live</span>
+              </span>
+            </div>
+
+            <!-- Action Buttons Row (Right-Aligned, 12px gap, Live Staging is Primary solid ink) -->
+            <div class="header-actions-row">
+              <button type="button" class="btn btn-outline" id="activePrintBtn" onclick="portalApp.exportProjectPdf()" title="Download &amp; Print as PDF (p)">
+                Print PDF &#x2193;
+              </button>
+              <a href="https://staging.client.solveseeds.in" target="_blank" rel="noopener" class="btn btn-dark" id="activeStagingBtn">
+                Live Staging &#8599;
+              </a>
+              <a href="https://github.com/solveseedtech/Company-OS" target="_blank" rel="noopener" class="btn btn-outline" id="activeGitBtn">
+                Git Handover &#8599;
+              </a>
+              <button type="button" class="btn btn-outline" id="openCustomizationModalBtn">
+                Request Customization
+              </button>
+            </div>
+          </div>
+
+          <!-- Project Title on its own line below (32px Serif) -->
+          <h1 class="header-project-title" id="activeProjTitle">
+            FinTech UPI 2.0 Recurring Billing &amp; Merchant Engine
+          </h1>
+
+          <!-- Meta line sitting right under the title (14px ink-muted) -->
+          <div class="header-meta-line" id="headerMetaLine">
+            10&ndash;14 Day Full-Stack Delivery &bull; Launch Oct 19, 2026 &bull; Pod: Raghav S.
+          </div>
+
+          <!-- Divider: 1px Hairline -->
+          <div class="header-hairline-divider"></div>
+
+          <!-- Progress Bar (2px tall, visible hairline track) -->
+          <div class="portal-bar-track-thin">
+            <div class="portal-bar-fill-thin" id="activeProgressBar" style="width: 82%;"></div>
+          </div>
+
+          <!-- Progress Sub-Context (Truncated Next: label with full tooltip) -->
+          <div class="header-progress-sub" id="headerProgressSub">
+            <span class="tabular-num">82%</span> complete &bull; <span class="tabular-num">18%</span> remaining &bull; est. <span class="tabular-num">3</span> days &bull; <span id="headerNextMilestoneText" title="NPCI Autopay webhook replay audit & compliance sign-off">Next: NPCI Autopay webhook replay</span>
+          </div>
+        </div>
+
+        <!-- 2-Column Responsive Layout: Left (Main: 720px) / Right (Sidebar: 320px on #F5F1E8) with 40px Gutter -->
+        <div class="portal-two-col-layout">
+
+          <!-- Left Column (Main: 720px max): Milestone Ledger + Deliverables List -->
+          <div class="portal-col-main">
+
+            <!-- Section 1: Milestone Phase List as a Vertical Ledger or Timeline -->
+            <div class="section-label-wrap section-header-split">
+              <span class="tier-section">MILESTONE PROGRESSION</span>
+              <div class="milestone-view-toggle">
+                <button type="button" class="milestone-toggle-btn active" id="btnViewLedger" onclick="portalApp.setMilestoneView('ledger')">Ledger</button>
+                <button type="button" class="milestone-toggle-btn" id="btnViewTimeline" onclick="portalApp.setMilestoneView('timeline')">Timeline</button>
+              </div>
+            </div>
+
+            <!-- Whole milestone stack sits inside ONE white card with hairline dividers -->
+            <div class="portal-card portal-ledger-card" id="phaseCardsContainer">
+              <!-- Rendered dynamically by portal.js as ledger rows or horizontal 14-day timeline -->
+            </div>
+
+            <!-- Section 2: Deliverables List in ONE white card -->
+            <div class="section-label-wrap" style="margin-top:64px;">
+              <span class="tier-section">DELIVERABLES &amp; IP HANDOVER</span>
+            </div>
+
+            <!-- 4 Deliverable rows inside ONE white card -->
+            <div class="portal-card portal-deliverables-card">
+              <div class="deliverable-row" onclick="portalApp.openFilePreview('git-deed')">
+                <span class="deliverable-name">Git Repository Transfer Confirmation</span>
+                <span class="deliverable-meta">PDF &bull; SHA-256 signed</span>
+                <span class="deliverable-arrow" onclick="event.stopPropagation(); portalApp.handleVaultDownload('git-deed')" title="Direct Download">&darr;</span>
+              </div>
+              <div class="deliverable-row" onclick="portalApp.openFilePreview('docker')">
+                <span class="deliverable-name">Production Dockerfile &amp; Compose</span>
+                <span class="deliverable-meta">Docker &bull; Alpine</span>
+                <span class="deliverable-arrow" onclick="event.stopPropagation(); portalApp.handleVaultDownload('docker')" title="Direct Download">&darr;</span>
+              </div>
+              <div class="deliverable-row" onclick="portalApp.openFilePreview('terraform')">
+                <span class="deliverable-name">Terraform Cloud Blueprints</span>
+                <span class="deliverable-meta">HCL &bull; AWS ap-south-1</span>
+                <span class="deliverable-arrow" onclick="event.stopPropagation(); portalApp.handleVaultDownload('terraform')" title="Direct Download">&darr;</span>
+              </div>
+              <div class="deliverable-row" onclick="portalApp.openFilePreview('secrets')">
+                <span class="deliverable-name">Encrypted Environment Secrets Vault</span>
+                <span class="deliverable-meta">GPG &bull; AES-256</span>
+                <span class="deliverable-arrow" onclick="event.stopPropagation(); portalApp.handleVaultDownload('secrets')" title="Direct Download">&darr;</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Sidebar Column (320px on #F5F1E8 with hairline dividers) -->
+          <div class="portal-col-sidebar">
+            <div class="portal-sidebar-surface">
+
+              <!-- Merged Assigned Architect Top Row (Single 32px-tall row) -->
+              <div class="sidebar-architect-row">
+                <div class="architect-avatar-mini" id="podAvatarLetter">RS</div>
+                <div class="architect-details-mini">
+                  <span class="architect-name-mini" id="podArchitectName">Raghav S.</span>
+                  <span class="architect-role-mini" id="podArchitectRole">Principal Architect</span>
+                </div>
+                <span class="architect-slack-mini">Slack Active</span>
+              </div>
+
+              <div class="sidebar-hairline-divider"></div>
+
+              <!-- Panel 1: Staging (3 Metrics Only, Plain Text, No Colored Dots) -->
+              <div class="sidebar-panel">
+                <div class="sidebar-panel-header">
+                  <span class="tier-section">STAGING</span>
+                  <button type="button" class="sidebar-text-action" id="btnRunHealthCheck">
+                    Run health check &rarr;
+                  </button>
+                </div>
+
+                <!-- 3 Numbers Only: Uptime, Latency, Status -->
+                <div class="staging-metrics-row">
+                  <div class="staging-metric-unit">
+                    <span class="metric-num tabular-num" id="healthUptime">99.98%</span>
+                    <span class="metric-caption">Uptime</span>
+                  </div>
+                  <div class="staging-metric-unit">
+                    <span class="metric-num tabular-num" id="healthLatency">18ms</span>
+                    <span class="metric-caption">Latency</span>
+                  </div>
+                  <div class="staging-metric-unit">
+                    <span class="metric-num" id="healthStatus">200 OK</span>
+                    <span class="metric-caption">Status</span>
+                  </div>
+                </div>
+
+                <!-- Bottom Fine-Print Line: Subdomain + Region + TLS -->
+                <div class="staging-bottom-line" id="stagingBottomLine">
+                  staging-prj9042.client.solveseeds.in &bull; Mumbai (ap-south-1) &bull; TLS 1.3
+                </div>
+
+                <!-- Velocity & Budget/Scope Drift -->
+                <div style="padding:10px 0 0; font-size:12px; color:var(--color-ink-muted); border-top:1px solid var(--color-hairline); margin-top:10px;">
+                  <div id="sidebarVelocityText" style="margin-bottom:2px; color:var(--color-ink);">Completed 2 of 4 phases &bull; 3 days ahead of schedule</div>
+                  <div id="sidebarScopeDriftText" style="font-size:11px;">Scope: +1 customization (included in SLA) &bull; Budget: on track</div>
+                </div>
+              </div>
+
+              <div class="sidebar-hairline-divider"></div>
+
+              <!-- Panel 2: Live Git Commits (Plain Monospace, No Colored Dots) -->
+              <div class="sidebar-panel">
+                <div class="sidebar-panel-header">
+                  <span class="tier-section">GIT AUDIT</span>
+                  <span class="sidebar-branch-label">main</span>
+                </div>
+
+                <div class="sidebar-commits-list" id="commitFeedList">
+                  <!-- Rendered dynamically by portal.js (3 commits max) -->
+                </div>
+
+                <div class="sidebar-panel-footer">
+                  <a href="https://github.com/solveseedtech/Company-OS" target="_blank" rel="noopener" class="sidebar-link">
+                    View full commit history &rarr;
+                  </a>
+                </div>
+              </div>
+
+              <div class="sidebar-hairline-divider"></div>
+
+              <!-- Panel 3: Continuous Maintenance OS -->
+              <div class="sidebar-panel" style="padding-bottom:0;">
+                <div class="sidebar-panel-header">
+                  <span class="tier-section">MAINTENANCE</span>
+                  <button type="button" class="sidebar-text-action" id="btnRequestCustomizationRight">
+                    New Request &rarr;
+                  </button>
+                </div>
+
+                <div id="customizationList" class="sidebar-req-list">
+                  <!-- Rendered dynamically by portal.js -->
+                </div>
+
+                <div class="sidebar-panel-footer" style="padding-top:16px;">
+                  <span class="tier-section" style="color:var(--color-ink-muted);">Lifetime SLA &bull; &dollar;0 overage</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ──────────────────────────────────────────
+           VIEW 3: GLOBAL ACTIVITY FEED ACROSS ALL VENTURES
+           ────────────────────────────────────────── -->
+      <section id="viewActivity" class="portal-view-section" style="display:none;">
+        <div class="portal-view-header">
+          <div>
+            <span class="tier-section">GLOBAL AUDIT TRAIL</span>
+            <h1 class="portal-display-title">Platform Activity</h1>
+            <p class="portal-view-desc">
+              Reverse-chronological ledger of verified milestone completions, code commits, and customization requests.
+            </p>
+          </div>
+
+          <div class="activity-stream-status">
+            <span class="live-dot-pulse"></span>
+            <span>Live Stream Connected</span>
+          </div>
+        </div>
+
+        <!-- Filter Text Tabs -->
+        <div class="activity-text-tabs" id="activityFilterBar">
+          <button type="button" class="activity-tab-btn active" data-filter="all">All Events (<span id="countAll">9</span>)</button>
+          <button type="button" class="activity-tab-btn" data-filter="mine">My Activity</button>
+          <button type="button" class="activity-tab-btn" data-filter="milestone">Milestones (<span id="countMilestone">3</span>)</button>
+          <button type="button" class="activity-tab-btn" data-filter="commit">Commits (<span id="countCommit">3</span>)</button>
+          <button type="button" class="activity-tab-btn" data-filter="deliverable">Deliverables (<span id="countDeliverable">2</span>)</button>
+          <button type="button" class="activity-tab-btn" data-filter="customization">Customizations (<span id="countCustomization">1</span>)</button>
+        </div>
+
+        <!-- Activity Feed List inside ONE white card with hairline dividers -->
+        <div class="portal-card portal-activity-card" id="globalActivityStream">
+          <!-- Rendered dynamically by portal.js -->
+        </div>
+      </section>
+
+
+      <!-- ──────────────────────────────────────────
+           VIEW 4: EXECUTIVE SUMMARY (1-SCREEN CEO VIEW)
+           ────────────────────────────────────────── -->
+      <section id="viewExecutive" class="portal-view-section" style="display:none;">
+        <div class="executive-wrap">
+          <!-- Top Row: Title & Project Scope -->
+          <div class="executive-header-row">
+            <div>
+              <span class="tier-section">EXECUTIVE BRIEFING &bull; SOVEREIGN STAKEHOLDER LENS</span>
+              <h1 class="portal-display-title" id="execProjTitle">FinTech UPI 2.0 Recurring Billing &amp; Merchant Engine</h1>
+              <div class="header-meta-line" id="execMetaLine">
+                10–14 Day Delivery &bull; Target Launch Oct 19, 2026 &bull; Lead: Raghav S. (Principal Systems Architect)
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <button type="button" class="btn btn-outline" onclick="portalApp.openCalendarSync()">
+                Sync Calendar &#x1F4C5;
+              </button>
+              <button type="button" class="btn btn-outline" onclick="portalApp.exportProjectPdf()">
+                Download Briefing PDF &#x2193;
+              </button>
+            </div>
+          </div>
+
+          <!-- 3 Big Numbers Grid -->
+          <div class="executive-hero-grid">
+            <div class="executive-metric-box">
+              <span class="executive-metric-lbl">ESTIMATED TIME TO LAUNCH</span>
+              <div class="executive-metric-val tabular-num" id="execDaysRemaining">3 Days</div>
+              <div class="executive-metric-sub" id="execLaunchDateSub">Launch date locked: Oct 19, 2026</div>
+            </div>
+
+            <div class="executive-metric-box">
+              <span class="executive-metric-lbl">MILESTONE VELOCITY</span>
+              <div class="executive-metric-val tabular-num" id="execProgressPct">82%</div>
+              <div class="executive-metric-sub" id="execVelocitySub">Completed 2 of 4 phases (3 days ahead)</div>
+            </div>
+
+            <div class="executive-metric-box">
+              <span class="executive-metric-lbl">OVERALL PLATFORM RAG STATUS</span>
+              <div class="executive-metric-val" id="execRagStatus" style="color:var(--color-success); font-size:24px;">
+                <span class="live-dot-pulse" style="display:inline-block; margin-right:6px;"></span> Healthy &bull; On Track
+              </div>
+              <div class="executive-metric-sub">Zero blocking architecture overages</div>
+            </div>
+          </div>
+
+          <!-- Split: 3 Bullets (Left) + 1 Progress Chart (Right) -->
+          <div class="executive-split-grid">
+            <!-- Left: Three Clear Bullets -->
+            <div class="portal-card executive-bullets-card">
+              <div class="section-label-wrap" style="margin-bottom:14px;">
+                <span class="tier-section">EXECUTIVE STATUS BULLETS</span>
+              </div>
+              
+              <div class="executive-bullet-item">
+                <span class="bullet-badge bullet-badge-done">DONE</span>
+                <div>
+                  <strong style="color:var(--color-ink);">Architecture Blueprint &amp; Core State Machine Complete.</strong>
+                  <p style="margin:2px 0 0; font-size:13px; color:var(--color-ink-muted);" id="execBulletDone">
+                    PostgreSQL RLS tenant boundaries, JWT vault, and BullMQ NPCI mandate queues verified with 100% test pass.
+                  </p>
+                </div>
+              </div>
+
+              <div class="executive-bullet-item">
+                <span class="bullet-badge bullet-badge-next">NEXT</span>
+                <div>
+                  <strong style="color:var(--color-ink);">NPCI Autopay Webhook Replay &amp; Production Sign-Off.</strong>
+                  <p style="margin:2px 0 0; font-size:13px; color:var(--color-ink-muted);" id="execBulletNext">
+                    Final rehearsal and simulated 10,000 mandates/sec burst verification scheduled for Days 10–12.
+                  </p>
+                </div>
+              </div>
+
+              <div class="executive-bullet-item">
+                <span class="bullet-badge bullet-badge-blocked">BLOCKED</span>
+                <div>
+                  <strong style="color:var(--color-ink);">Zero Platform Blockers.</strong>
+                  <p style="margin:2px 0 0; font-size:13px; color:var(--color-ink-muted);" id="execBulletBlocked">
+                    All external NPCI and banking test sandboxes are responsive; regional ap-south-1 VPC routes are clear.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Planned vs Actual Chart -->
+            <div class="portal-card executive-chart-card">
+              <div class="section-label-wrap" style="margin-bottom:14px;">
+                <span class="tier-section">PLANNED VS ACTUAL PROGRESSION</span>
+              </div>
+              <p style="font-size:13px; color:var(--color-ink-muted); margin:0 0 16px;">
+                Comparing scheduled milestone baseline against live staging delivery on Day 9 of 14.
+              </p>
+
+              <div style="margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+                  <span style="font-weight:500; color:var(--color-ink);">Actual Delivery (Live Staging)</span>
+                  <span class="tabular-num" style="font-weight:600; color:var(--color-ink);" id="execChartActualPct">82%</span>
+                </div>
+                <div class="portal-bar-track-thin" style="height:8px;">
+                  <div class="portal-bar-fill-thin" id="execChartActualBar" style="width:82%; height:8px; background:var(--color-ink);"></div>
+                </div>
+              </div>
+
+              <div style="margin-bottom:20px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+                  <span style="color:var(--color-ink-muted);">Target Planned Baseline</span>
+                  <span class="tabular-num" style="color:var(--color-ink-muted);" id="execChartPlannedPct">70%</span>
+                </div>
+                <div class="portal-bar-track-thin" style="height:8px;">
+                  <div class="portal-bar-fill-thin" style="width:70%; height:8px; background:#A8A29E;"></div>
+                </div>
+              </div>
+
+              <div class="exec-chart-delta" style="font-size:12px; color:var(--color-success); font-weight:500;">
+                &#x2197; Velocity Delta: +12% ahead of planned sprint schedule
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom 1 CTA Bar: "Book a call with Raghav" -->
+          <div class="portal-card executive-cta-bar">
+            <div>
+              <div class="tier-section">EXECUTIVE ESCALATION &amp; STRATEGY</div>
+              <div style="font-size:15px; font-weight:500; color:var(--color-ink); margin-top:2px;">
+                Need architectural clarity or adjusting strategic roadmap priorities?
+              </div>
+              <div style="font-size:12px; color:var(--color-ink-muted);">
+                Direct access to Raghav S. (Principal Systems Architect &bull; Solve Seeds Edge Pod)
+              </div>
+            </div>
+            <a href="mailto:raghav@solveseeds.in?subject=Executive%20Strategic%20Review%20-%20PRJ-9042" class="btn btn-dark" style="font-size:14px; padding:10px 20px;">
+              Book a call with Raghav &rarr;
+            </a>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ──────────────────────────────────────────
+           VIEW 5: CONTRACTS, INVOICES & LEGAL SURFACE (/portal/documents)
+           ────────────────────────────────────────── -->
+      <section id="viewDocuments" class="portal-view-section" style="display:none;">
+        <div class="portal-view-header">
+          <div>
+            <span class="tier-section">LEGAL &amp; COMMERCIAL LEDGER &bull; <span id="docsClientIdTag">SST-CORP-4091</span></span>
+            <h1 class="portal-display-title">Contracts &amp; Invoices</h1>
+            <p class="portal-view-desc">
+              Immutable repository of executed MSAs, signed SOWs, &#x20B9;0 change-order invoices, and tax compliance certificates.
+            </p>
+          </div>
+
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn btn-outline" onclick="portalApp.openFilePreview('git-deed')">
+              View IP Transfer Deed
+            </button>
+            <button type="button" class="btn btn-dark" onclick="portalApp.handleVaultDownload('all-docs')">
+              Download All Archive (.ZIP)
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Strip -->
+        <div class="docs-filter-strip" id="docsFilterStrip">
+          <button type="button" class="docs-filter-btn active" data-filter="all" onclick="portalApp.filterDocuments('all')">All Documents (6)</button>
+          <button type="button" class="docs-filter-btn" data-filter="contract" onclick="portalApp.filterDocuments('contract')">Agreements &amp; SOW (2)</button>
+          <button type="button" class="docs-filter-btn" data-filter="invoice" onclick="portalApp.filterDocuments('invoice')">Invoices &amp; SLA (2)</button>
+          <button type="button" class="docs-filter-btn" data-filter="tax" onclick="portalApp.filterDocuments('tax')">Tax &amp; Compliance (2)</button>
+        </div>
+
+        <!-- Documents Ledger Card -->
+        <div class="portal-card documents-card" id="documentsLedgerList">
+          <!-- Rendered dynamically by portal.js -->
+        </div>
+      </section>
+
+
+      <!-- ──────────────────────────────────────────
+           VIEW 6: PRODUCTION TELEMETRY (REAL USAGE FOR BOARD DECKS)
+           ────────────────────────────────────────── -->
+      <section id="viewTelemetry" class="portal-view-section" style="display:none;">
+        <div class="portal-view-header">
+          <div>
+            <span class="tier-section">PRODUCTION METRICS &bull; LIVE EDGE CLUSTER (ap-south-1)</span>
+            <h1 class="portal-display-title">Platform Telemetry</h1>
+            <p class="portal-view-desc">
+              Verified operational statistics across the last 30 days. Ready for board meetings and investor presentations.
+            </p>
+          </div>
+
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn btn-outline" id="btnCopyBoardDeck" onclick="portalApp.copyTelemetryForBoard()">
+              Copy for Board Deck &#x2398;
+            </button>
+            <button type="button" class="btn btn-dark" onclick="portalApp.handleInstantHealthCheck()">
+              Verify Edge Health &rarr;
+            </button>
+          </div>
+        </div>
+
+        <div class="telemetry-dashboard-wrap">
+          <!-- 5 Hero KPIs as requested -->
+          <div class="telemetry-kpi-row">
+            <div class="telemetry-mini-card">
+              <div class="telemetry-mini-label">API CALLS (30 DAYS)</div>
+              <div class="telemetry-mini-val tabular-num">2.4M</div>
+              <div class="telemetry-mini-sub" style="color:var(--color-success);">&#x2197; +14.2% MoM growth</div>
+            </div>
+
+            <div class="telemetry-mini-card">
+              <div class="telemetry-mini-label">ACTIVE MERCHANTS</div>
+              <div class="telemetry-mini-val tabular-num">340</div>
+              <div class="telemetry-mini-sub">98.2% monthly retention</div>
+            </div>
+
+            <div class="telemetry-mini-card">
+              <div class="telemetry-mini-label">TRANSACTIONS PROCESSED</div>
+              <div class="telemetry-mini-val tabular-num">&#x20B9;4.2Cr</div>
+              <div class="telemetry-mini-sub">&#x20B9;42,850,000 settled</div>
+            </div>
+
+            <div class="telemetry-mini-card">
+              <div class="telemetry-mini-label">LATENCY (P95)</div>
+              <div class="telemetry-mini-val tabular-num">22ms</div>
+              <div class="telemetry-mini-sub">p50: 8ms &bull; p99: 41ms</div>
+            </div>
+
+            <div class="telemetry-mini-card">
+              <div class="telemetry-mini-label">ERROR RATE</div>
+              <div class="telemetry-mini-val tabular-num" style="color:var(--color-success);">0.01%</div>
+              <div class="telemetry-mini-sub">99.99% mandate success</div>
+            </div>
+
+            <div class="telemetry-mini-card">
+              <div class="telemetry-mini-label">EDGE REGION</div>
+              <div class="telemetry-mini-val" style="font-size:18px;">Mumbai</div>
+              <div class="telemetry-mini-sub">AWS ap-south-1 &bull; 3 AZs</div>
+            </div>
+          </div>
+
+          <!-- Charts & Endpoints Split -->
+          <div class="telemetry-chart-grid">
+            <div class="telemetry-feed-card">
+              <div class="section-label-wrap" style="margin-bottom:14px;">
+                <span class="tier-section">HIGH-THROUGHPUT ROUTE BREAKDOWN</span>
+              </div>
+              <table class="notif-matrix-table" style="margin-top:10px;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;">Endpoint Pattern</th>
+                    <th>Calls (30d)</th>
+                    <th>p95 Latency</th>
+                    <th>Success Rate</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="text-align:left; font-family:monospace; font-size:12px;">POST /v2/mandate/create</td>
+                    <td class="tabular-num">1,120,400</td>
+                    <td class="tabular-num">19ms</td>
+                    <td class="tabular-num" style="color:var(--color-success);">99.99%</td>
+                    <td><span class="doc-status-tag signed">Normal</span></td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:left; font-family:monospace; font-size:12px;">POST /v2/webhook/autopay</td>
+                    <td class="tabular-num">842,100</td>
+                    <td class="tabular-num">14ms</td>
+                    <td class="tabular-num" style="color:var(--color-success);">100.0%</td>
+                    <td><span class="doc-status-tag signed">Normal</span></td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:left; font-family:monospace; font-size:12px;">GET /v2/settlement/reconcile</td>
+                    <td class="tabular-num">478,920</td>
+                    <td class="tabular-num">28ms</td>
+                    <td class="tabular-num" style="color:var(--color-success);">99.98%</td>
+                    <td><span class="doc-status-tag signed">Normal</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="telemetry-feed-card">
+              <div class="section-label-wrap" style="margin-bottom:14px;">
+                <span class="tier-section">UPSTREAM GATEWAYS</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:8px; border-bottom:1px solid var(--color-hairline);">
+                  <div>
+                    <div style="font-weight:500; font-size:13px;">NPCI UPI AutoPay Switch</div>
+                    <div style="font-size:11px; color:var(--color-ink-muted);">Direct ISO 8583 Gateway</div>
+                  </div>
+                  <span class="doc-status-tag signed">200 OK &bull; 18ms</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:8px; border-bottom:1px solid var(--color-hairline);">
+                  <div>
+                    <div style="font-weight:500; font-size:13px;">HDFC / ICICI Banking Node</div>
+                    <div style="font-size:11px; color:var(--color-ink-muted);">Primary Acquirer Switch</div>
+                  </div>
+                  <span class="doc-status-tag signed">200 OK &bull; 21ms</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <div style="font-weight:500; font-size:13px;">Neon PostgreSQL Edge Pool</div>
+                    <div style="font-size:11px; color:var(--color-ink-muted);">Lakebase Connection Pool</div>
+                  </div>
+                  <span class="doc-status-tag signed">Active &bull; 12ms</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       INTERACTIVE CUSTOMIZATION REQUEST MODAL
+       ══════════════════════════════════════════ -->
+  <div class="portal-modal-backdrop" id="customizationModal" aria-modal="true" role="dialog" aria-labelledby="modalHeading">
+    <div class="portal-card portal-modal-box">
+      <button type="button" class="portal-modal-close" id="modalCloseBtn" aria-label="Close dialog">&times;</button>
+      <span class="tier-section">MAINTENANCE DESK</span>
+      <h3 id="modalHeading" class="modal-heading-serif">
+        Request Platform Customization
+      </h3>
+      <p class="modal-sub-desc">
+        All workflow additions, schema adjustments, and UI iterations are covered under your Lifetime Maintenance partnership with zero hourly invoices.
+      </p>
+
+      <form id="customizationForm">
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div>
+            <label class="field-label" for="reqProjSelect">Target Project</label>
+            <select id="reqProjSelect" class="field-input field-select">
+              <option value="PRJ-9042-FINTECH">PRJ-9042-FINTECH &mdash; BharatPay FinTech UPI 2.0</option>
+              <option value="PRJ-8119-ERP">PRJ-8119-ERP &mdash; Multi-Location Warehouse Inventory</option>
+              <option value="PRJ-5520-AI">PRJ-5520-AI &mdash; Sovereign AI Enterprise RAG Vault</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="field-label" for="reqTitle">Customization Title</label>
+            <input type="text" id="reqTitle" class="field-input" placeholder="e.g. Add webhook retry alert to merchant dashboard" required>
+          </div>
+
+          <div>
+            <label class="field-label" for="reqPriority">Implementation Priority</label>
+            <select id="reqPriority" class="field-input field-select">
+              <option value="Standard Sprint Cycle (2–3 Days)">Standard Sprint Cycle (2&ndash;3 Days)</option>
+              <option value="Expedited Release (24–48 Hours)">Expedited Release (24&ndash;48 Hours)</option>
+              <option value="Critical Priority (Immediate Pod Assignment)">Critical Priority (Immediate Pod Assignment)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="field-label" for="reqDesc">Requirements Specification</label>
+            <textarea id="reqDesc" class="field-input" rows="4" placeholder="Detail the business logic, target users, or data fields to be added..." required></textarea>
+          </div>
+
+          <div class="modal-surcharge-note">
+            Lifetime SLA Coverage &bull; &dollar;0.00 / &#8377;0.00 Surcharge &bull; Direct to Principal Architect
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:8px;">
+            <button type="button" class="btn btn-outline" id="modalCancelBtn">Cancel</button>
+            <button type="submit" class="btn btn-dark" id="modalSubmitBtn">Submit Request &rarr;</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       GLOBAL SEARCH & COMMAND PALETTE (⌘K / /)
+       ══════════════════════════════════════════ -->
+  <div class="portal-modal-backdrop" id="commandPaletteModal" aria-modal="true" role="dialog" aria-label="Global Search and Command Palette">
+    <div class="portal-card portal-cmd-box">
+      <div class="cmd-input-wrap">
+        <span class="cmd-input-icon">&#x1F50D;</span>
+        <input type="text" id="cmdPaletteInput" class="cmd-input-field" placeholder="Search platforms, files, commits, actions (&#x2318;K)..." autocomplete="off" spellcheck="false">
+        <kbd class="cmd-kbd-esc" onclick="portalApp.closeCommandPalette()">ESC</kbd>
+      </div>
+      <div class="cmd-results-container" id="cmdResultsList">
+        <!-- Injected dynamically by portal.js -->
+      </div>
+      <div class="cmd-footer-hints">
+        <span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> Navigate</span>
+        <span><kbd>&crarr;</kbd> Select</span>
+        <span><kbd>esc</kbd> Dismiss</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       FILE PREVIEW DRAWER (PDF, JSON, SQL, HCL)
+       ══════════════════════════════════════════ -->
+  <div class="portal-drawer-backdrop" id="fileDrawerBackdrop" onclick="portalApp.closeFilePreview()"></div>
+  <aside class="portal-file-drawer" id="filePreviewDrawer" aria-label="File Preview">
+    <div class="drawer-head">
+      <div>
+        <span class="tier-section" id="drawerFileFormatTag">PDF &bull; SHA-256</span>
+        <h3 class="drawer-title" id="drawerFileName">filename.pdf</h3>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="btn btn-outline" style="font-size:12px; padding:4px 10px;" id="drawerDownloadBtn">Download</button>
+        <button type="button" class="drawer-close-btn" onclick="portalApp.closeFilePreview()" aria-label="Close preview">&times;</button>
+      </div>
+    </div>
+    <div class="drawer-body" id="drawerFileContent">
+      <!-- Injected dynamically by portal.js -->
+    </div>
+    <div class="drawer-foot" id="drawerFileMetaFoot">
+      <!-- Audit authorship & verification metadata -->
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════
+       CHANGE REQUEST FULL LIFECYCLE MODAL
+       ══════════════════════════════════════════ -->
+  <div class="portal-modal-backdrop" id="requestDetailModal" aria-modal="true" role="dialog" aria-labelledby="reqDetailTitle">
+    <div class="portal-card portal-req-detail-box">
+      <button type="button" class="portal-modal-close" onclick="portalApp.closeRequestDetail()" aria-label="Close dialog">&times;</button>
+      <div class="req-detail-head">
+        <div class="req-id-pill" id="reqDetailId">REQ-042</div>
+        <h3 class="req-detail-title" id="reqDetailTitle">Request Title</h3>
+        <div class="req-detail-meta" id="reqDetailMeta">Submitted by Siddharth M. &bull; Oct 14, 2026</div>
+      </div>
+
+      <!-- Lifecycle Stepper / Vertical Timeline -->
+      <div class="req-timeline-section">
+        <span class="tier-section">LIFECYCLE VERIFICATION</span>
+        <div class="req-stepper-list" id="reqDetailStepper">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Discussion & Audit Thread -->
+      <div class="req-discussion-section">
+        <span class="tier-section">DISCUSSION &amp; SIGN-OFF THREAD</span>
+        <div class="req-comments-list" id="reqDetailComments">
+          <!-- Rendered dynamically -->
+        </div>
+        <form id="reqCommentForm" onsubmit="portalApp.submitRequestComment(event)">
+          <textarea id="reqCommentInput" class="field-input" rows="2" placeholder="Reply to systems pod or attach note..." required></textarea>
+          <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+            <button type="submit" class="btn btn-outline" style="font-size:14px; padding:6px 14px;">Post Update &rarr;</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       NOTIFICATION PREFERENCES MODAL
+       Route: /portal/settings/notifications
+       ══════════════════════════════════════════ -->
+  <div class="portal-modal-backdrop" id="notificationPrefsModal" aria-modal="true" role="dialog" aria-labelledby="notifPrefsHeading">
+    <div class="portal-card portal-notif-box" style="max-width:520px;">
+      <button type="button" class="portal-modal-close" onclick="portalApp.closeNotificationPrefs()" aria-label="Close dialog">&times;</button>
+      <span class="tier-section">SYSTEM PREFERENCES</span>
+      <h3 id="notifPrefsHeading" class="modal-heading-serif">Notification Preferences</h3>
+      <p class="modal-sub-desc">
+        Configure client email updates and communicate directly with the Solve Seeds engineering team.
+      </p>
+
+      <form id="notifPrefsForm" onsubmit="portalApp.sendContactMessage(event)" style="margin-top:20px;">
+        <!-- 1. One toggle: "Email me when something important happens" (on by default) -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border:1px solid var(--color-hairline); border-radius:var(--r-xs); background:var(--color-surface-muted); margin-bottom:20px;">
+          <div>
+            <label for="toggleEmailNotifications" style="font-size:14px; font-weight:500; color:var(--color-ink); cursor:pointer;">
+              Email me when something important happens
+            </label>
+            <div style="font-size:11px; color:var(--color-ink-muted);">Milestones, deliverables, and architecture sign-offs</div>
+          </div>
+          <label class="portal-switch">
+            <input type="checkbox" id="toggleEmailNotifications" checked style="accent-color:var(--color-ink); width:18px; height:18px; cursor:pointer;">
+          </label>
+        </div>
+
+        <!-- 2. One textarea: "Message to Solve Seeds" -->
+        <div style="margin-bottom:16px;">
+          <label class="field-label" for="contactMessageText">Message to Solve Seeds</label>
+          <textarea id="contactMessageText" class="field-input" rows="4" placeholder="Write your question, feedback, or request — we read every message." required style="resize:vertical;"></textarea>
+          <div id="contactMessageError" style="font-size:12px; color:var(--color-danger); margin-top:4px; display:none;"></div>
+        </div>
+
+        <!-- 3. One text input: "Your reply-to email" -->
+        <div style="margin-bottom:20px;">
+          <label class="field-label" for="contactReplyEmail">Your reply-to email</label>
+          <input type="email" id="contactReplyEmail" class="field-input" required placeholder="you@company.com">
+          <div id="contactEmailError" style="font-size:12px; color:var(--color-danger); margin-top:4px; display:none;"></div>
+        </div>
+
+        <!-- Inline Status Message (Shown on success / error, never a toast) -->
+        <div id="contactInlineStatus" style="display:none; font-size:13px; margin-bottom:16px; padding:10px 14px; border-radius:var(--r-xs);"></div>
+
+        <!-- 4. One primary button: "Send to Solve Seeds" -->
+        <div style="display:flex; justify-content:flex-end; gap:10px; align-items:center;">
+          <button type="button" class="btn btn-outline" onclick="portalApp.closeNotificationPrefs()">Cancel</button>
+          <button type="submit" class="btn btn-dark" id="btnSendSolveSeeds">Send to Solve Seeds</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       KEYBOARD SHORTCUTS CHEAT SHEET (?)
+       ══════════════════════════════════════════ -->
+  <div class="portal-modal-backdrop" id="shortcutsModal" aria-modal="true" role="dialog" aria-labelledby="shortcutsHeading">
+    <div class="portal-card portal-shortcuts-box">
+      <button type="button" class="portal-modal-close" onclick="portalApp.closeShortcutsModal()" aria-label="Close dialog">&times;</button>
+      <span class="tier-section">KEYBOARD NAVIGATION</span>
+      <h3 id="shortcutsHeading" class="modal-heading-serif">Hotkeys &amp; Navigation</h3>
+      
+      <div class="shortcuts-grid">
+        <div class="shortcut-item"><kbd>g</kbd> <kbd>p</kbd> <span>All Projects</span></div>
+        <div class="shortcut-item"><kbd>g</kbd> <kbd>d</kbd> <span>Project Detail</span></div>
+        <div class="shortcut-item"><kbd>g</kbd> <kbd>a</kbd> <span>Live Activity</span></div>
+        <div class="shortcut-item"><kbd>&#x2318;K</kbd> or <kbd>/</kbd> <span>Command Palette &amp; Search</span></div>
+        <div class="shortcut-item"><kbd>p</kbd> <span>Export PDF Report</span></div>
+        <div class="shortcut-item"><kbd>?</kbd> <span>Open this cheat sheet</span></div>
+        <div class="shortcut-item"><kbd>j</kbd> / <kbd>k</kbd> <span>Next / prev activity item</span></div>
+        <div class="shortcut-item"><kbd>Esc</kbd> <span>Dismiss any modal or drawer</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       WHAT'S NEW / RELEASE NOTES MODAL (/portal/whats-new)
+       ══════════════════════════════════════════ -->
+  <div class="portal-modal-backdrop" id="whatsNewModal" aria-modal="true" role="dialog" aria-labelledby="whatsNewHeading">
+    <div class="portal-card portal-modal-box" style="max-width:580px;">
+      <button type="button" class="portal-modal-close" onclick="portalApp.closeWhatsNew()" aria-label="Close dialog">&times;</button>
+      <span class="tier-section">PRODUCT EVOLUTION</span>
+      <h3 id="whatsNewHeading" class="modal-heading-serif">What's New in the Portal</h3>
+      <p class="modal-sub-desc">
+        Client-facing updates, workflow enhancements, and platform upgrades shipped by our engineering pod.
+      </p>
+
+      <div class="release-note-block">
+        <div class="release-date-badge">OCTOBER 2026 &bull; RELEASE v2.4</div>
+        <div class="release-feature-item">
+          <span style="color:var(--color-success); font-weight:700;">&bull;</span>
+          <div>
+            <strong>Timeline View (Gantt Visualization):</strong> Toggle between the dense milestone ledger and a horizontal 14-day delivery timeline.
+          </div>
+        </div>
+        <div class="release-feature-item">
+          <span style="color:var(--color-success); font-weight:700;">&bull;</span>
+          <div>
+            <strong>Direct Milestone Approvals:</strong> Authorize phase handovers with one click and instant cryptographic audit verification.
+          </div>
+        </div>
+        <div class="release-feature-item">
+          <span style="color:var(--color-success); font-weight:700;">&bull;</span>
+          <div>
+            <strong>Two-Way Slack &amp; Email Sync:</strong> Replies to digest emails and Slack channel threads now flow automatically into project audit trails.
+          </div>
+        </div>
+        <div class="release-feature-item">
+          <span style="color:var(--color-success); font-weight:700;">&bull;</span>
+          <div>
+            <strong>Executive Summary &amp; Contracts Ledger:</strong> 1-screen CEO overview plus direct repository of signed MSAs and &#x20B9;0 SLA invoices.
+          </div>
+        </div>
+      </div>
+
+      <div class="release-note-block" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">
+        <div class="release-date-badge">SEPTEMBER 2026 &bull; RELEASE v2.3</div>
+        <div class="release-feature-item">
+          <span style="color:var(--color-ink-muted); font-weight:700;">&bull;</span>
+          <div>
+            <strong>Universal Command Palette (&#x2318;K):</strong> Fast slash navigation (/status, /approve, /download, /export, /message).
+          </div>
+        </div>
+        <div class="release-feature-item">
+          <span style="color:var(--color-ink-muted); font-weight:700;">&bull;</span>
+          <div>
+            <strong>Live Telemetry Stream:</strong> Sub-25ms regional staging health monitors connected via Server-Sent Events.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       REFERRAL FLOW MODAL
+       ══════════════════════════════════════════ -->
+  <div class="portal-modal-backdrop" id="referralModal" aria-modal="true" role="dialog" aria-labelledby="referralHeading">
+    <div class="portal-card portal-modal-box" style="max-width:540px;">
+      <button type="button" class="portal-modal-close" onclick="portalApp.closeReferralModal()" aria-label="Close dialog">&times;</button>
+      <span class="tier-section">FOUNDER REFERRAL LOOP</span>
+      <h3 id="referralHeading" class="modal-heading-serif">Your Project is On Track &amp; Healthy</h3>
+      <p class="modal-sub-desc">
+        Know another founder or CTO building a mission-critical platform? Introduce them to Solve Seeds. When they begin their engagement, both companies receive 1 month of complimentary platform engineering SLA credit (&#x20B9;0).
+      </p>
+
+      <div class="referral-box">
+        <span class="referral-link-text" id="referralLinkText">https://solveseeds.in/referral?ref=SST-CORP-4091-BHARATPAY</span>
+        <button type="button" class="btn btn-dark" style="font-size:12px; padding:6px 12px; flex-shrink:0;" onclick="portalApp.copyReferralLink()">
+          Copy Link
+        </button>
+      </div>
+
+      <form id="referralInviteForm" onsubmit="portalApp.submitReferralInvite(event)" style="margin-top:16px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div>
+            <label class="field-label" for="refPeerEmail">Founder or CTO Email</label>
+            <input type="email" id="refPeerEmail" class="field-input" placeholder="e.g. founder@venture.in" required>
+          </div>
+          <div>
+            <label class="field-label" for="refPeerOrg">Organization Name</label>
+            <input type="text" id="refPeerOrg" class="field-input" placeholder="e.g. NeoScale Payments" required>
+          </div>
+          <button type="submit" class="btn btn-dark" style="width:100%; margin-top:4px;">
+            Send Direct Warm Introduction &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TWO-WAY CALENDAR INTEGRATION MODAL
+       ══════════════════════════════════════════ -->
+  <div class="portal-modal-backdrop" id="calendarModal" aria-modal="true" role="dialog" aria-labelledby="calendarHeading">
+    <div class="portal-card portal-modal-box" style="max-width:540px;">
+      <button type="button" class="portal-modal-close" onclick="portalApp.closeCalendarSync()" aria-label="Close dialog">&times;</button>
+      <span class="tier-section">CALENDAR SYNCHRONIZATION</span>
+      <h3 id="calendarHeading" class="modal-heading-serif">Two-Way Calendar Feed</h3>
+      <p class="modal-sub-desc">
+        Push milestones, delivery reviews, and the target launch date directly to your Google Calendar, Apple Calendar, or Microsoft Outlook. When dates adjust, calendar events update automatically.
+      </p>
+
+      <div style="display:flex; flex-direction:column; gap:12px; margin:20px 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid var(--color-hairline); border-radius:var(--r-xs); background:var(--color-surface-muted);">
+          <div>
+            <strong style="font-size:13px; color:var(--color-ink);">Google Calendar (Instant Add)</strong>
+            <div style="font-size:11px; color:var(--color-ink-muted);">Sync Target Launch Oct 19 &bull; 10:00 AM IST</div>
+          </div>
+          <button type="button" class="btn btn-dark" style="font-size:12px; padding:6px 12px;" onclick="portalApp.addToGoogleCalendar()">
+            Add to Google &rarr;
+          </button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid var(--color-hairline); border-radius:var(--r-xs); background:var(--color-surface-muted);">
+          <div>
+            <strong style="font-size:13px; color:var(--color-ink);">Standard iCalendar (.ICS File)</strong>
+            <div style="font-size:11px; color:var(--color-ink-muted);">Compatible with Apple Calendar &amp; Outlook</div>
+          </div>
+          <button type="button" class="btn btn-outline" style="font-size:12px; padding:6px 12px;" onclick="portalApp.downloadIcsCalendar()">
+            Download .ICS &darr;
+          </button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid var(--color-hairline); border-radius:var(--r-xs); background:var(--color-surface-muted);">
+          <div>
+            <strong style="font-size:13px; color:var(--color-ink);">Live WebCal Subscription URL</strong>
+            <div style="font-size:11px; color:var(--color-ink-muted);">webcal://portal.solveseeds.in/cal/PRJ-9042.ics</div>
+          </div>
+          <button type="button" class="btn btn-outline" style="font-size:12px; padding:6px 12px;" onclick="portalApp.copyWebcalUrl()">
+            Copy WebCal
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MULTI-TENANT WHITE-LABEL RE-BRANDING MODAL
+       ══════════════════════════════════════════ -->
+  <div class="portal-modal-backdrop" id="whiteLabelModal" aria-modal="true" role="dialog" aria-labelledby="whiteLabelHeading">
+    <div class="portal-card portal-modal-box" style="max-width:540px;">
+      <button type="button" class="portal-modal-close" onclick="portalApp.closeWhiteLabel()" aria-label="Close dialog">&times;</button>
+      <span class="tier-section">AGENCY INFRASTRUCTURE</span>
+      <h3 id="whiteLabelHeading" class="modal-heading-serif">Multi-Tenant White-Label</h3>
+      <p class="modal-sub-desc">
+        If you are an agency or studio, rebrand this entire client staging portal with your own logo, organization name, and brand accent for your downstream clients.
+      </p>
+
+      <form id="whiteLabelForm" onsubmit="portalApp.applyWhiteLabel(event)">
+        <div style="display:flex; flex-direction:column; gap:14px; margin-top:16px;">
+          <div>
+            <label class="field-label" for="wlBrandName">Agency / Company Name</label>
+            <input type="text" id="wlBrandName" class="field-input" placeholder="e.g. Apex Digital Ventures" value="BharatPay Studio">
+          </div>
+          <div>
+            <label class="field-label" for="wlMonogram">Logo Monogram (2 Letters)</label>
+            <input type="text" id="wlMonogram" class="field-input" placeholder="e.g. BP" maxlength="3" value="BP">
+          </div>
+          <div>
+            <label class="field-label" for="wlCustomDomain">Custom CNAME Domain</label>
+            <input type="text" id="wlCustomDomain" class="field-input" placeholder="staging.youragency.com" value="portal.bharatpay.in">
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+            <button type="button" class="btn btn-outline" onclick="portalApp.resetWhiteLabel()">Reset to Solve Seeds</button>
+            <button type="submit" class="btn btn-dark">Apply White-Label &rarr;</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TOAST NOTIFICATION CONTAINER
+       ══════════════════════════════════════════ -->
+  <div class="portal-toast-container" id="portalToastContainer" aria-live="polite"></div>
+
+  <!-- ══════════════════════════════════════════
+       EDITORIAL FOOTER (Left-Aligned with SS Mark)
+       Canvas Cream #FDFBF7, 1px Hairline, Left-Aligned
+       ══════════════════════════════════════════ -->
+  <footer class="portal-editorial-footer">
+    <div class="portal-footer-inner">
+      <div class="portal-footer-left">
+        <div class="brand-icon-mini">SS</div>
+        <div class="portal-footer-links">
+          <a href="index.html#hero">Platform</a>
+          <span>&bull;</span>
+          <a href="index.html#suite">Modules</a>
+          <span>&bull;</span>
+          <a href="index.html#roadmap">Delivery</a>
+          <span>&bull;</span>
+          <a href="index.html#intake">Contact</a>
+          <span>&bull;</span>
+          <a href="mailto:executive@solveseeds.in">executive@solveseeds.in</a>
+        </div>
+      </div>
+      <div class="portal-footer-copy">
+        &copy; 2026 Solve Seeds &bull; Bengaluru &bull; Mumbai &bull; Hyderabad &bull; Delhi
+      </div>
+    </div>
+  </footer>
+
+  <!-- Service Worker Registration for PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => {
+            console.log('Solve Seeds PWA Service Worker registered:', reg.scope);
+          })
+          .catch(err => {
+            console.warn('PWA registration notice:', err);
+          });
+      });
+    }
+  </script>
+  <script src="js/portal.js"></script>
+  <script src="js/neon-assistant.js"></script>
+</body>
+</html>
