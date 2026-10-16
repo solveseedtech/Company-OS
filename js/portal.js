@@ -1276,57 +1276,33 @@ aV2p77L88819A019bBqwe897a1L287hGb01Aas9921bBhq77L0992b18hG7771La
       submitBtn.textContent = 'Signing In…';
     }
 
-    let resolvedClientId = 'SST-CORP-4091';
-    let resolvedName = email.split('@')[0];
+    // 1. Attempt Neon Auth authentication
     try {
-      const users = JSON.parse(localStorage.getItem('sst_registered_users') || '[]');
-      const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-      if (found) {
-        resolvedClientId = found.clientId || resolvedClientId;
-        resolvedName = found.name || resolvedName;
-      }
-    } catch (err) {}
-
-    try {
-      const resp = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await resp.json().catch(() => ({}));
-
-      if (resp.ok && data.ok) {
-        currentClientId = data.user?.clientId || resolvedClientId;
-        sessionStorage.setItem('sst_client_id', currentClientId);
-        sessionStorage.setItem('sst_client_name', data.user?.name || resolvedName);
-        localStorage.setItem('sst_client_email', email);
-        showDashboard();
-        return;
-      } else if (resp.status === 401 && !localStorage.getItem('sst_registered_users')) {
-        if (inlineErr) {
-          inlineErr.textContent = data.error || 'Invalid credentials.';
-          inlineErr.style.display = 'block';
+      if (window.neonAuth) {
+        const result = await neonAuth.signIn({ email, password });
+        if (result && result.ok) {
+          currentClientId = sessionStorage.getItem('sst_client_id') || 'SST-CORP-4091';
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+          }
+          showDashboard();
+          return;
+        } else {
+          if (inlineErr) {
+            inlineErr.textContent = (result && result.error) || 'Invalid email or password.';
+            inlineErr.style.display = 'block';
+          }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+          }
+          return;
         }
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Sign In';
-        }
-        return;
       }
-    } catch (err) {
-      // Offline / static client testing
+    } catch (neonErr) {
+      console.warn('Neon auth sign-in error:', neonErr);
     }
-
-    currentClientId = resolvedClientId;
-    sessionStorage.setItem('sst_client_id', currentClientId);
-    sessionStorage.setItem('sst_client_name', resolvedName);
-    localStorage.setItem('sst_client_email', email);
-    showDashboard();
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Sign In';
-    }
-  }
 
   function togglePasswordVisibility(inputId, btn) {
     const input = document.getElementById(inputId);
@@ -1342,6 +1318,9 @@ aV2p77L88819A019bBqwe897a1L287hGb01Aas9921bBhq77L0992b18hG7771La
 
   function handleLogout() {
     closeAvatarMenu();
+    if (window.neonAuth) {
+      window.neonAuth.signOut();
+    }
     sessionStorage.removeItem('sst_client_id');
     sessionStorage.removeItem('sst_client_name');
     if (window.portalAssistant) {
@@ -1417,8 +1396,11 @@ aV2p77L88819A019bBqwe897a1L287hGb01Aas9921bBhq77L0992b18hG7771La
 
     if (!elements.portalNavActions) return;
 
+    const clientName = sessionStorage.getItem('sst_client_name') || 'Client';
     elements.portalNavActions.innerHTML = `
-      <span class="portal-user-meta" id="portalNavClientId">Client: ${escapeHtml(currentClientId)}</span>
+      <span class="portal-user-meta" id="portalNavClientId" title="Account: ${escapeHtml(clientName)} (${escapeHtml(currentClientId)})">
+        <span style="font-weight:600; color:var(--color-ink);">${escapeHtml(clientName)}</span> &bull; <span style="font-size:11px; opacity:0.85;">${escapeHtml(currentClientId)}</span>
+      </span>
 
       <!-- Right Menu Button (Three-dot) -->
       <div class="avatar-menu-wrap" id="portalMenuWrap">

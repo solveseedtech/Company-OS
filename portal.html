@@ -16,13 +16,6 @@
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/grid.css">
   <link rel="stylesheet" href="css/main.css">
-  
-  <!-- Progressive Web App (PWA) Manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#FFFBE9">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="SolveSeeds">
 </head>
 <body class="portal-page">
 
@@ -1133,20 +1126,7 @@
     </div>
   </footer>
 
-  <!-- Service Worker Registration for PWA -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => {
-            console.log('Solve Seeds PWA Service Worker registered:', reg.scope);
-          })
-          .catch(err => {
-            console.warn('PWA registration notice:', err);
-          });
-      });
-    }
-  </script>
+  <script src="js/neon-auth.js"></script>
   <script src="js/portal.js"></script>
   <script src="js/neon-assistant.js"></script>
 </body>

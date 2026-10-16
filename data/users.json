@@ -1,0 +1,26 @@
+﻿[
+    {
+        "email":  "client@solveseeds.in",
+        "password":  "Password123!",
+        "name":  "Siddharth M.",
+        "clientId":  "SST-CORP-4091",
+        "role":  "Client CTO",
+        "createdAt":  "2026-10-01T00:00:00.000Z"
+    },
+    {
+        "email":  "siddharth@enterprise.in",
+        "password":  "Password123!",
+        "name":  "Siddharth M.",
+        "clientId":  "SST-CORP-4091",
+        "role":  "Client CTO",
+        "createdAt":  "2026-10-01T00:00:00.000Z"
+    },
+    {
+        "email":  "aarav@enterprise.in",
+        "password":  "Password123!",
+        "name":  "Aarav Sharma",
+        "clientId":  "SST-CORP-5520",
+        "role":  "Client Enterprise",
+        "createdAt":  "2026-10-16T19:06:39.7316270+05:30"
+    }
+]

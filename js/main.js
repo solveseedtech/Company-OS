@@ -57,10 +57,10 @@
 
   // ── 3. Active Navigation Tracking ───────────────────────────
   function initActiveNav() {
-    const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
+    const navLinks = document.querySelectorAll('.nav-menu a[href^="#"], .mobile-nav-link[href^="#"]');
     if (!navLinks.length) return;
 
-    const sections = Array.from(navLinks)
+    const sections = Array.from(document.querySelectorAll('.nav-menu a[href^="#"]'))
       .map(link => {
         const id = link.getAttribute('href').slice(1);
         return document.getElementById(id);
@@ -280,6 +280,57 @@
     updateCarouselState();
   }
 
+  // ── 7. Mobile & Tablet Website Navigation Drawer ────────────
+  function initMobileNav() {
+    const toggleBtn = document.getElementById('navToggleBtn');
+    const drawer = document.getElementById('mobileNavDrawer');
+    const backdrop = document.getElementById('mobileNavBackdrop');
+    const closeBtn = document.getElementById('mobileNavCloseBtn');
+    if (!toggleBtn || !drawer || !backdrop) return;
+
+    function openDrawer() {
+      drawer.classList.add('is-open');
+      backdrop.classList.add('is-open');
+      toggleBtn.classList.add('is-active');
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('drawer-locked');
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('is-open');
+      backdrop.classList.remove('is-open');
+      toggleBtn.classList.remove('is-active');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      backdrop.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('drawer-locked');
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = drawer.classList.contains('is-open');
+      if (isOpen) closeDrawer();
+      else openDrawer();
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+        closeDrawer();
+      }
+    });
+
+    // Close drawer when any mobile link is tapped
+    drawer.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', () => {
+        closeDrawer();
+      });
+    });
+  }
+
   // ── Helper ──────────────────────────────────────────────────
   function escapeHtml(str) {
     const div = document.createElement('div');
@@ -301,5 +352,6 @@
     initSmoothScroll();
     initIntakeForm();
     initProductShowcase();
+    initMobileNav();
   }
 })();

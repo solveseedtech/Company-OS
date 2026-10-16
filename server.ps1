@@ -3,7 +3,7 @@ param(
     [int]$Port = 3000
 )
 
-$server = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, $Port)
+$server = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, $Port)
 $server.Server.SetSocketOption([System.Net.Sockets.SocketOptionLevel]::Socket, [System.Net.Sockets.SocketOptionName]::ReuseAddress, $true)
 
 try {
@@ -25,11 +25,35 @@ $mimeTypes = @{
     ".ico"  = "image/x-icon"
 }
 
+$NEON_AUTH_BASE_URL = "https://ep-soft-art-b4n8mzvd.neonauth.c-6.us-east-2.aws.neon.tech/neondb/auth"
+$NEON_AUTH_JWKS_URL = "https://ep-soft-art-b4n8mzvd.neonauth.c-6.us-east-2.aws.neon.tech/neondb/auth/.well-known/jwks.json"
+
 $contactRateLimits = @{}
+
+$usersFilePath = Join-Path $PSScriptRoot "data\users.json"
+function Get-UsersList {
+    if (Test-Path $usersFilePath) {
+        try {
+            $content = Get-Content $usersFilePath -Raw -Encoding UTF8
+            $parsed = $content | ConvertFrom-Json
+            if ($parsed -is [System.Array]) { return [System.Collections.ArrayList]@($parsed) }
+            elseif ($parsed) { return [System.Collections.ArrayList]@($parsed) }
+        } catch {}
+    }
+    return [System.Collections.ArrayList]@()
+}
+
+function Save-UsersList($userList) {
+    $dataDir = Join-Path $PSScriptRoot "data"
+    if (-not (Test-Path $dataDir)) { New-Item -ItemType Directory -Path $dataDir -Force | Out-Null }
+    $userList | ConvertTo-Json -Depth 5 | Set-Content $usersFilePath -Encoding UTF8
+}
 
 while ($true) {
     try {
         $client = $server.AcceptTcpClient()
+        $client.ReceiveTimeout = 4000
+        $client.SendTimeout = 4000
         $stream = $client.GetStream()
         
         $buffer = New-Object byte[] 16384
@@ -87,6 +111,19 @@ while ($true) {
                     continue
                 }
 
+                # API Endpoint: /api/auth/config
+                if ($rawPath -eq "/api/auth/config" -and ($method -eq "GET" -or $method -eq "OPTIONS")) {
+                    $respJson = '{"ok":true,"authUrl":"' + $NEON_AUTH_BASE_URL + '","jwksUrl":"' + $NEON_AUTH_JWKS_URL + '"}'
+                    $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                    $header = "HTTP/1.1 200 OK`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nAccess-Control-Allow-Methods: GET, OPTIONS`r`nConnection: close`r`n`r`n"
+                    $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
+                    $stream.Write($hBytes, 0, $hBytes.Length)
+                    $stream.Write($respBytes, 0, $respBytes.Length)
+                    $stream.Flush()
+                    $client.Close()
+                    continue
+                }
+
                 # API Endpoint: /api/auth/login
                 if ($rawPath -eq "/api/auth/login" -and $method -eq "POST") {
                     $jsonBody = "{}"
@@ -104,20 +141,40 @@ while ($true) {
                         $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
                         $stream.Write($hBytes, 0, $hBytes.Length)
                         $stream.Write($respBytes, 0, $respBytes.Length)
-                    } elseif ($password.Length -lt 10 -or -not ($password -match "[A-Za-z]") -or -not ($password -match "[0-9]")) {
-                        $respJson = '{"ok":false,"error":"Password must be at least 10 characters and contain a letter and a number."}'
-                        $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
-                        $header = "HTTP/1.1 400 Bad Request`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
-                        $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
-                        $stream.Write($hBytes, 0, $hBytes.Length)
-                        $stream.Write($respBytes, 0, $respBytes.Length)
                     } else {
-                        $respJson = '{"ok":true,"user":{"email":"' + $email + '","name":"Siddharth M.","clientId":"SST-CORP-4091"}}'
-                        $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
-                        $header = "HTTP/1.1 200 OK`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
-                        $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
-                        $stream.Write($hBytes, 0, $hBytes.Length)
-                        $stream.Write($respBytes, 0, $respBytes.Length)
+                        $users = Get-UsersList
+                        $matchedUser = $null
+                        foreach ($u in $users) {
+                            if ($u.email -and $u.email.ToLower() -eq $email) {
+                                $matchedUser = $u
+                                break
+                            }
+                        }
+
+                        if (-not $matchedUser) {
+                            $respJson = '{"ok":false,"error":"No account found with this email. Please check your email or sign up."}'
+                            $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                            $header = "HTTP/1.1 401 Unauthorized`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+                            $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
+                            $stream.Write($hBytes, 0, $hBytes.Length)
+                            $stream.Write($respBytes, 0, $respBytes.Length)
+                        } elseif ($matchedUser.password -ne $password) {
+                            $respJson = '{"ok":false,"error":"Incorrect password. Please try again."}'
+                            $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                            $header = "HTTP/1.1 401 Unauthorized`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+                            $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
+                            $stream.Write($hBytes, 0, $hBytes.Length)
+                            $stream.Write($respBytes, 0, $respBytes.Length)
+                        } else {
+                            $uName = if ($matchedUser.name) { $matchedUser.name } else { ($email -split "@")[0] }
+                            $uClientId = if ($matchedUser.clientId) { $matchedUser.clientId } else { "SST-CORP-4091" }
+                            $respJson = '{"ok":true,"user":{"email":"' + $email + '","name":"' + $uName + '","clientId":"' + $uClientId + '"},"redirect":"/portal"}'
+                            $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                            $header = "HTTP/1.1 200 OK`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+                            $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
+                            $stream.Write($hBytes, 0, $hBytes.Length)
+                            $stream.Write($respBytes, 0, $respBytes.Length)
+                        }
                     }
                     $stream.Flush()
                     $client.Close()
@@ -135,8 +192,16 @@ while ($true) {
                     $password = if ($parsed -and $parsed.password) { $parsed.password } else { "" }
                     $confirmPassword = if ($parsed -and $parsed.confirmPassword) { $parsed.confirmPassword } else { "" }
 
-                    if ([string]::IsNullOrWhiteSpace($email) -or [string]::IsNullOrWhiteSpace($password)) {
-                        $respJson = '{"ok":false,"error":"All fields are required."}'
+                    $emailRegex = "^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                    if ([string]::IsNullOrWhiteSpace($email) -or -not ($email -match $emailRegex)) {
+                        $respJson = '{"ok":false,"error":"Please enter a valid email address."}'
+                        $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                        $header = "HTTP/1.1 400 Bad Request`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+                        $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
+                        $stream.Write($hBytes, 0, $hBytes.Length)
+                        $stream.Write($respBytes, 0, $respBytes.Length)
+                    } elseif ($password.Length -lt 6) {
+                        $respJson = '{"ok":false,"error":"Password must be at least 6 characters."}'
                         $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
                         $header = "HTTP/1.1 400 Bad Request`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
                         $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
@@ -149,20 +214,45 @@ while ($true) {
                         $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
                         $stream.Write($hBytes, 0, $hBytes.Length)
                         $stream.Write($respBytes, 0, $respBytes.Length)
-                    } elseif ($password.Length -lt 10 -or -not ($password -match "[A-Za-z]") -or -not ($password -match "[0-9]")) {
-                        $respJson = '{"ok":false,"error":"Password must be at least 10 characters and contain a letter and a number."}'
-                        $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
-                        $header = "HTTP/1.1 400 Bad Request`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
-                        $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
-                        $stream.Write($hBytes, 0, $hBytes.Length)
-                        $stream.Write($respBytes, 0, $respBytes.Length)
                     } else {
-                        $respJson = '{"ok":true,"message":"Account created successfully.","user":{"email":"' + $email + '","clientId":"SST-CORP-' + (Get-Random -Minimum 1000 -Maximum 9999) + '"}}'
-                        $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
-                        $header = "HTTP/1.1 200 OK`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
-                        $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
-                        $stream.Write($hBytes, 0, $hBytes.Length)
-                        $stream.Write($respBytes, 0, $respBytes.Length)
+                        $users = Get-UsersList
+                        $exists = $false
+                        foreach ($u in $users) {
+                            if ($u.email -and $u.email.ToLower() -eq $email) {
+                                $exists = $true
+                                break
+                            }
+                        }
+
+                        if ($exists) {
+                            $respJson = '{"ok":false,"error":"An account with this email already exists. Please sign in."}'
+                            $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                            $header = "HTTP/1.1 409 Conflict`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+                            $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
+                            $stream.Write($hBytes, 0, $hBytes.Length)
+                            $stream.Write($respBytes, 0, $respBytes.Length)
+                        } else {
+                            $newClientId = "SST-CORP-" + (Get-Random -Minimum 1000 -Maximum 9999)
+                            $localName = ($email -split "@")[0]
+                            $formattedName = (Get-Culture).TextInfo.ToTitleCase($localName.Replace(".", " ").Replace("_", " "))
+                            $newUserObj = [pscustomobject]@{
+                                email = $email
+                                password = $password
+                                name = $formattedName
+                                clientId = $newClientId
+                                role = "Client Enterprise"
+                                createdAt = (Get-Date).ToString("o")
+                            }
+                            $users.Add($newUserObj) | Out-Null
+                            Save-UsersList $users
+
+                            $respJson = '{"ok":true,"message":"Account created successfully.","user":{"email":"' + $email + '","name":"' + $formattedName + '","clientId":"' + $newClientId + '"},"redirect":"/portal"}'
+                            $respBytes = [System.Text.Encoding]::UTF8.GetBytes($respJson)
+                            $header = "HTTP/1.1 200 OK`r`nContent-Type: application/json`r`nContent-Length: $($respBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+                            $hBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
+                            $stream.Write($hBytes, 0, $hBytes.Length)
+                            $stream.Write($respBytes, 0, $respBytes.Length)
+                        }
                     }
                     $stream.Flush()
                     $client.Close()
@@ -226,7 +316,7 @@ while ($true) {
                     }
                     $fileBytes = [System.IO.File]::ReadAllBytes($filePath)
                     
-                    $header = "HTTP/1.1 200 OK`r`nContent-Type: $contentType`r`nContent-Length: $($fileBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nCache-Control: no-cache, no-store, must-revalidate`r`nClear-Site-Data: `"cache`"`r`nConnection: close`r`n`r`n"
+                    $header = "HTTP/1.1 200 OK`r`nContent-Type: $contentType`r`nContent-Length: $($fileBytes.Length)`r`nAccess-Control-Allow-Origin: *`r`nCache-Control: no-cache, no-store, must-revalidate`r`nConnection: close`r`n`r`n"
                     $headerBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
                     $stream.Write($headerBytes, 0, $headerBytes.Length)
                     $stream.Write($fileBytes, 0, $fileBytes.Length)

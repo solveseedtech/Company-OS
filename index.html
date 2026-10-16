@@ -36,20 +36,60 @@
       <nav>
         <ul class="nav-menu">
           <li><a href="#hero">Platform</a></li>
-          <li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#roadmap">14-Day Delivery</a></li>
+          <li><a href="#problem">Comparison</a></li>
+          <li><a href="#suite">App Suite</a></li>
           <li><a href="#maintenance">Maintenance</a></li>
-          <li><a href="#suite">Modules</a></li>
-          <li><a href="#tco">Pricing</a></li>
+          <li><a href="#tco">Plans</a></li>
           <li><a href="#faq">FAQ</a></li>
         </ul>
       </nav>
 
       <div class="nav-cta">
-        <a href="portal.html" class="btn btn-dark" id="navLoginBtn">Client Login</a>
-        <a href="#intake" class="btn btn-outline" id="navConsultBtn">Initiate Consultation &rarr;</a>
+        <a href="portal.html" class="btn btn-dark nav-btn-login" id="navLoginBtn">Client Login</a>
+        <a href="#intake" class="btn btn-outline nav-btn-consult" id="navConsultBtn">Initiate Consultation &rarr;</a>
+        <button type="button" class="nav-toggle-btn" id="navToggleBtn" aria-expanded="false" aria-label="Toggle navigation menu" aria-controls="mobileNavDrawer">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- ── Mobile & Tablet Responsive Website Navigation Drawer ── -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-hidden="true" role="dialog" aria-label="Website Navigation">
+    <div class="mobile-nav-drawer-header">
+      <a href="/" class="brand">
+        <div class="brand-icon">SS</div>
+        <span class="brand-name">Solve Seeds</span>
+      </a>
+      <button type="button" class="mobile-nav-close-btn" id="mobileNavCloseBtn" aria-label="Close navigation">&times;</button>
+    </div>
+    <div class="mobile-nav-drawer-body">
+      <span class="mobile-nav-section-tag">WEBSITE NAVIGATION</span>
+      <ul class="mobile-nav-list">
+        <li><a href="#hero" class="mobile-nav-link"><span class="nav-num">01</span> Platform Architecture</a></li>
+        <li><a href="#products" class="mobile-nav-link"><span class="nav-num">02</span> Sovereign Product Suite</a></li>
+        <li><a href="#roadmap" class="mobile-nav-link"><span class="nav-num">03</span> 14-Day Delivery Engine</a></li>
+        <li><a href="#problem" class="mobile-nav-link"><span class="nav-num">04</span> Solve Seeds vs Traditional</a></li>
+        <li><a href="#suite" class="mobile-nav-link"><span class="nav-num">05</span> Enterprise App Ecosystem</a></li>
+        <li><a href="#maintenance" class="mobile-nav-link"><span class="nav-num">06</span> Continuous Maintenance OS</a></li>
+        <li><a href="#tco" class="mobile-nav-link"><span class="nav-num">07</span> Plans &amp; Investment</a></li>
+        <li><a href="#faq" class="mobile-nav-link"><span class="nav-num">08</span> Frequently Asked Questions</a></li>
+      </ul>
+      <div class="mobile-nav-drawer-actions">
+        <a href="#intake" class="btn btn-dark btn-lg" id="mobileConsultBtn">Initiate Architecture Consultation &rarr;</a>
+        <a href="portal.html" class="btn btn-outline" id="mobilePortalBtn">Client Portal Login</a>
+      </div>
+      <div class="mobile-nav-drawer-footer">
+        <div>100&percnt; Sovereign IP &bull; Lifetime SLA Included</div>
+        <div>solveseedtech@gmail.com</div>
+      </div>
+    </div>
+  </aside>
 
   <main>
 
@@ -66,22 +106,22 @@
               We engineer the sovereign software platforms that power the <span class="serif-italic">next generation</span> of India.
             </h1>
             <p class="hero-sub reveal">
-              Solve Seeds Technologies builds custom software platforms for growing businesses and modern founders. We deliver complete, production-ready software in <strong>5&ndash;7 days for MVPs</strong> and <strong>10&ndash;14 days for full enterprise platforms</strong>. Best of all, we provide lifetime maintenance&mdash;so every future feature, tweak, and upgrade is 100&percnt; included.
+              Custom enterprise platforms for Indian scale-ups and founders. <strong>Shipped in 5&ndash;14 days</strong> with full Git code handover and lifetime maintenance included.
             </p>
 
             <div class="hero-actions reveal">
               <a href="#intake" class="btn btn-dark btn-lg">Initiate Architecture Consultation &rarr;</a>
-              <a href="#maintenance" class="btn btn-outline btn-lg">Explore Maintenance OS &rarr;</a>
+              <a href="#products" class="btn btn-outline btn-lg">Explore Product Suite &darr;</a>
             </div>
 
             <div class="hero-slas reveal">
-              <span><strong>5&ndash;7 Days</strong> MVP Launch</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px; margin-right:4px; color:var(--color-warn);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><strong>5&ndash;7 Days</strong> MVP Delivery</span>
               <span class="hero-slas-dot">&bull;</span>
-              <span><strong>10&ndash;14 Days</strong> Full Production</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px; margin-right:4px; color:var(--color-success);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><strong>10&ndash;14 Days</strong> Full SaaS</span>
               <span class="hero-slas-dot">&bull;</span>
-              <span><strong>100&percnt; Code Ownership</strong> Handover</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px; margin-right:4px; color:var(--accent);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><strong>100&percnt; Git Handover</strong></span>
               <span class="hero-slas-dot">&bull;</span>
-              <span><strong>Lifetime Maintenance</strong> Included</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px; margin-right:4px; color:var(--color-success);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><strong>Lifetime SLA</strong> Included</span>
             </div>
           </div>
 
@@ -180,44 +220,9 @@
               </div>
 
               <div class="showcase-card-visual">
-                <div class="showcase-diagram-badge">LIVE ARCHITECTURE SCHEMA</div>
+                <div class="showcase-diagram-badge">ENTERPRISE CRM PLATFORM</div>
                 <div class="showcase-img-wrap">
-                  <svg class="showcase-svg" viewBox="0 0 480 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CRM pipeline diagram">
-                    <rect width="480" height="320" fill="#FDFBF7"/>
-                    <rect x="32" y="32" width="128" height="256" rx="4" fill="#FFFFFF" stroke="rgba(20, 17, 12, 0.12)" stroke-width="1"/>
-                    <text x="44" y="54" fill="#6B6559" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600" letter-spacing="0.08em">LEAD INTAKE (4)</text>
-                    <line x1="32" y1="64" x2="160" y2="64" stroke="rgba(20, 17, 12, 0.08)" stroke-width="1"/>
-                    <rect x="42" y="74" width="108" height="52" rx="3" fill="#FDFBF7" stroke="rgba(20, 17, 12, 0.08)" stroke-width="1"/>
-                    <rect x="50" y="86" width="60" height="4" rx="2" fill="#14110C"/>
-                    <rect x="50" y="96" width="80" height="3" rx="1.5" fill="#6B6559"/>
-                    <rect x="50" y="106" width="48" height="12" rx="2" fill="rgba(20, 17, 12, 0.04)"/>
-                    <text x="54" y="115" fill="#6B6559" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="8">Enterprise Deal</text>
-                    <rect x="42" y="136" width="108" height="44" rx="3" fill="#FDFBF7" stroke="rgba(20, 17, 12, 0.08)" stroke-width="1"/>
-                    <rect x="50" y="148" width="70" height="4" rx="2" fill="#14110C"/>
-                    <rect x="50" y="158" width="50" height="3" rx="1.5" fill="#6B6559"/>
-
-                    <rect x="176" y="32" width="128" height="256" rx="4" fill="#FFFFFF" stroke="rgba(20, 17, 12, 0.12)" stroke-width="1"/>
-                    <text x="188" y="54" fill="#6B6559" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600" letter-spacing="0.08em">QUALIFIED (2)</text>
-                    <line x1="176" y1="64" x2="304" y2="64" stroke="rgba(20, 17, 12, 0.08)" stroke-width="1"/>
-                    <rect x="186" y="74" width="108" height="64" rx="3" fill="#FDFBF7" stroke="rgba(20, 17, 12, 0.12)" stroke-width="1"/>
-                    <rect x="194" y="86" width="74" height="4" rx="2" fill="#14110C"/>
-                    <rect x="194" y="96" width="60" height="3" rx="1.5" fill="#6B6559"/>
-                    <rect x="194" y="106" width="52" height="14" rx="2" fill="rgba(184, 121, 31, 0.12)"/>
-                    <text x="199" y="116" fill="#B8791F" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="8" font-weight="600">PROPOSAL</text>
-                    <rect x="186" y="148" width="108" height="44" rx="3" fill="#FDFBF7" stroke="rgba(20, 17, 12, 0.08)" stroke-width="1"/>
-                    <rect x="194" y="160" width="55" height="4" rx="2" fill="#14110C"/>
-                    <rect x="194" y="170" width="70" height="3" rx="1.5" fill="#6B6559"/>
-
-                    <rect x="320" y="32" width="128" height="256" rx="4" fill="#FFFFFF" stroke="rgba(20, 17, 12, 0.12)" stroke-width="1"/>
-                    <text x="332" y="54" fill="#3E7A4E" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600" letter-spacing="0.08em">CLOSED WON</text>
-                    <line x1="320" y1="64" x2="448" y2="64" stroke="rgba(20, 17, 12, 0.08)" stroke-width="1"/>
-                    <rect x="330" y="74" width="108" height="68" rx="3" fill="#FDFBF7" stroke="rgba(62, 122, 78, 0.25)" stroke-width="1"/>
-                    <rect x="338" y="86" width="80" height="4" rx="2" fill="#14110C"/>
-                    <rect x="338" y="96" width="64" height="3" rx="1.5" fill="#6B6559"/>
-                    <rect x="338" y="106" width="54" height="14" rx="2" fill="rgba(62, 122, 78, 0.12)"/>
-                    <text x="342" y="116" fill="#3E7A4E" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="8" font-weight="600">ANNUAL SLA</text>
-                    <text x="338" y="132" fill="#14110C" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="9" font-weight="600">₹24,00,000</text>
-                  </svg>
+                  <img src="assets/crm-preview.jpg" alt="Solve Seeds Custom CRM Platform Interface" class="showcase-product-img" loading="lazy">
                 </div>
               </div>
             </div>
@@ -369,50 +374,9 @@
               </div>
 
               <div class="showcase-card-visual">
-                <div class="showcase-diagram-badge">LIVE ARCHITECTURE SCHEMA</div>
+                <div class="showcase-diagram-badge">FINANCIAL &amp; OPERATIONS ERP</div>
                 <div class="showcase-img-wrap">
-                  <svg class="showcase-svg" viewBox="0 0 480 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ERP warehouse inventory diagram">
-                    <rect width="480" height="320" fill="#FDFBF7"/>
-                    <rect x="40" y="40" width="160" height="240" rx="3" fill="#FFFFFF" stroke="#14110C" stroke-width="1.5"/>
-                    <line x1="40" y1="100" x2="200" y2="100" stroke="#14110C" stroke-width="1.5"/>
-                    <line x1="40" y1="160" x2="200" y2="160" stroke="#14110C" stroke-width="1.5"/>
-                    <line x1="40" y1="220" x2="200" y2="220" stroke="#14110C" stroke-width="1.5"/>
-                    <text x="52" y="58" fill="#6B6559" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="9" font-weight="600" letter-spacing="0.08em">BAY A &bull; INVENTORY</text>
-                    
-                    <rect x="52" y="68" width="40" height="24" rx="2" fill="#F5F1E8" stroke="rgba(20, 17, 12, 0.2)" stroke-width="1"/>
-                    <rect x="100" y="68" width="40" height="24" rx="2" fill="#F5F1E8" stroke="rgba(20, 17, 12, 0.2)" stroke-width="1"/>
-                    <rect x="148" y="68" width="40" height="24" rx="2" fill="#F5F1E8" stroke="rgba(20, 17, 12, 0.2)" stroke-width="1"/>
-
-                    <rect x="52" y="112" width="60" height="40" rx="2" fill="#FFFFFF" stroke="#14110C" stroke-width="1"/>
-                    <rect x="58" y="120" width="30" height="3" rx="1.5" fill="#14110C"/>
-                    <rect x="58" y="128" width="44" height="2" fill="#6B6559"/>
-                    <rect x="58" y="136" width="20" height="8" rx="1" fill="rgba(62, 122, 78, 0.15)"/>
-                    <text x="62" y="142" fill="#3E7A4E" font-family="sans-serif" font-size="6" font-weight="bold">OK</text>
-
-                    <rect x="120" y="112" width="68" height="40" rx="2" fill="#F5F1E8" stroke="rgba(20, 17, 12, 0.2)" stroke-width="1"/>
-                    <rect x="52" y="172" width="44" height="40" rx="2" fill="#F5F1E8" stroke="rgba(20, 17, 12, 0.2)" stroke-width="1"/>
-                    <rect x="104" y="172" width="84" height="40" rx="2" fill="#FFFFFF" stroke="#14110C" stroke-width="1"/>
-
-                    <rect x="52" y="232" width="136" height="36" rx="2" fill="#FDFBF7" stroke="rgba(20, 17, 12, 0.1)" stroke-width="1"/>
-                    <text x="60" y="254" fill="#6B6559" font-family="sans-serif" font-size="9">SKU-8119 &bull; 1,420 UNITS</text>
-
-                    <path d="M 205 132 L 275 132" stroke="#14110C" stroke-width="1.5" stroke-dasharray="4 3"/>
-                    <polygon points="275,128 283,132 275,136" fill="#14110C"/>
-                    <rect x="220" y="110" width="48" height="16" rx="2" fill="#F5F1E8" stroke="rgba(20, 17, 12, 0.1)" stroke-width="1"/>
-                    <text x="225" y="121" fill="#14110C" font-family="sans-serif" font-size="7" font-weight="600">DISPATCH</text>
-
-                    <rect x="286" y="60" width="154" height="200" rx="4" fill="#FFFFFF" stroke="rgba(20, 17, 12, 0.12)" stroke-width="1"/>
-                    <rect x="286" y="60" width="154" height="32" rx="4" fill="#F5F1E8"/>
-                    <text x="300" y="81" fill="#14110C" font-family="sans-serif" font-size="10" font-weight="600">PURCHASE ORDER #409</text>
-                    <text x="300" y="112" fill="#6B6559" font-family="sans-serif" font-size="9">Vendor: AgriCentral Ltd</text>
-                    <text x="300" y="128" fill="#6B6559" font-family="sans-serif" font-size="9">Items: 4 SKUs Verified</text>
-                    <line x1="300" y1="144" x2="426" y2="144" stroke="rgba(20, 17, 12, 0.08)" stroke-width="1"/>
-                    <text x="300" y="166" fill="#14110C" font-family="sans-serif" font-size="11" font-weight="600">₹8,45,200.00</text>
-                    <rect x="300" y="180" width="80" height="18" rx="2" fill="rgba(62, 122, 78, 0.1)"/>
-                    <text x="306" y="193" fill="#3E7A4E" font-family="sans-serif" font-size="8" font-weight="600">GST E-INVOICE OK</text>
-                    <rect x="300" y="210" width="126" height="30" rx="3" fill="#FDFBF7" stroke="rgba(20, 17, 12, 0.08)" stroke-width="1"/>
-                    <text x="308" y="228" fill="#6B6559" font-family="sans-serif" font-size="8">Stock synced: 3 hubs</text>
-                  </svg>
+                  <img src="assets/erp-preview.jpg" alt="Solve Seeds Custom ERP &amp; Invoicing Platform Interface" class="showcase-product-img" loading="lazy">
                 </div>
               </div>
             </div>
@@ -940,63 +904,59 @@
     <section class="section section-alt" id="problem">
       <div class="container">
         <div class="section-head reveal">
-          <span class="section-tag">02 &mdash; THE FOUNDER&rsquo;S DILEMMA</span>
-          <h2 class="section-title">If you have ever hired developers before, you know the struggle.</h2>
+          <span class="section-tag">02 &mdash; THE ARCHITECTURAL ADVANTAGE</span>
+          <h2 class="section-title">Solve Seeds vs. Traditional Development</h2>
           <p class="section-desc">
-            Traditional software development is broken. Freelancers hand over messy code and disappear, while traditional agencies charge expensive hourly rates for even small tweaks. Here is how Solve Seeds solves both permanently:
+            Why modern founders and CTOs choose our continuous engineering model over traditional agencies and fragmented freelance contractors.
           </p>
+        <div class="table-scroll-hint mobile-only">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4M3 12h18"/></svg>
+          <span>Swipe table horizontally to compare all dimensions &rarr;</span>
         </div>
 
-        <div class="cards-2 reveal-group">
-
-          <div class="problem-card">
-            <div class="problem-quote">
-              &ldquo;The freelancer delivered the code, collected final payment, and disappeared the moment a critical production bug emerged.&rdquo;
-            </div>
-            <div class="problem-fix">
-              <span class="problem-fix-tag">SOLVE SEEDS FIX &bull; DEDICATED TEAM FOR LIFE</span>
-              <p class="problem-fix-desc">
-                Your senior engineering team stays with your company for the long run. Launching is only Day One; we monitor, fix, and maintain your software continuously.
-              </p>
-            </div>
-          </div>
-
-          <div class="problem-card">
-            <div class="problem-quote">
-              &ldquo;The agency sent a huge invoice and a 3-week timeline just to add two simple form fields and a new dashboard filter.&rdquo;
-            </div>
-            <div class="problem-fix">
-              <span class="problem-fix-tag">SOLVE SEEDS FIX &bull; ALL CUSTOMIZATIONS INCLUDED</span>
-              <p class="problem-fix-desc">
-                With our Continuous Maintenance OS, every future feature, tweak, and UI update is 100&percnt; included in your agreement. No surprise bills or hourly fees.
-              </p>
-            </div>
-          </div>
-
-          <div class="problem-card">
-            <div class="problem-quote">
-              &ldquo;We paid for four months of development and received messy, undocumented code locked under the agency&rsquo;s license.&rdquo;
-            </div>
-            <div class="problem-fix">
-              <span class="problem-fix-tag">SOLVE SEEDS FIX &bull; 100&percnt; CODE OWNERSHIP</span>
-              <p class="problem-fix-desc">
-                You receive the complete Git repository, setup scripts, and documentation from Day One. You own every line of code with zero royalties or vendor lock-in.
-              </p>
-            </div>
-          </div>
-
-          <div class="problem-card">
-            <div class="problem-quote">
-              &ldquo;We tried an overseas US template that broke completely when trying to handle Indian UPI payments, GST billing, and local compliance.&rdquo;
-            </div>
-            <div class="problem-fix">
-              <span class="problem-fix-tag">SOLVE SEEDS FIX &bull; NATIVELY BUILT FOR INDIA</span>
-              <p class="problem-fix-desc">
-                Built natively for the Indian market: UPI 2.0 Autopay, automated GST e-invoices, DPDP Act 2023 compliance, and ultra-fast local cloud latency.
-              </p>
-            </div>
-          </div>
-
+        <div class="comparison-table-wrap reveal">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th style="width:25%;">Capability / Dimension</th>
+                <th style="width:23%;">Freelancer</th>
+                <th style="width:23%;">Legacy Agency</th>
+                <th style="width:29%;" class="col-highlight">Solve Seeds Technologies</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-feature">Delivery Timeline</td>
+                <td><span class="compare-badge-bad">&cross;</span> 2&ndash;4 months (frequent delays)</td>
+                <td><span class="compare-badge-bad">&cross;</span> 4&ndash;6 months (bureaucratic)</td>
+                <td class="col-highlight"><span class="compare-badge-good">&check;</span> <strong>5&ndash;7 Days (MVP) &bull; 10&ndash;14 Days (Full)</strong></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Future Customizations</td>
+                <td><span class="compare-badge-bad">&cross;</span> Disappears after launch</td>
+                <td><span class="compare-badge-bad">&cross;</span> &dollar;60&ndash;&dollar;150/hr change orders</td>
+                <td class="col-highlight"><span class="compare-badge-good">&check;</span> <strong>100&percnt; Free &amp; Included (Lifetime SLA)</strong></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Code &amp; IP Ownership</td>
+                <td><span class="compare-badge-bad">&cross;</span> Messy, undocumented code</td>
+                <td><span class="compare-badge-bad">&cross;</span> Locked in agency templates</td>
+                <td class="col-highlight"><span class="compare-badge-good">&check;</span> <strong>100&percnt; Full Git Handover from Day 1</strong></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Production Maintenance</td>
+                <td><span class="compare-badge-bad">&cross;</span> Zero uptime support</td>
+                <td><span class="compare-badge-bad">&cross;</span> Costly retainer queues</td>
+                <td class="col-highlight"><span class="compare-badge-good">&check;</span> <strong>24/7 Telemetry &amp; Senior Architect Pod</strong></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Indian Ecosystem Ready</td>
+                <td><span class="compare-badge-bad">&cross;</span> Broken UPI &amp; GST setups</td>
+                <td><span class="compare-badge-bad">&cross;</span> Clunky third-party plugins</td>
+                <td class="col-highlight"><span class="compare-badge-good">&check;</span> <strong>Native UPI 2.0, GST IRN &amp; DPDP 2023</strong></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -1015,61 +975,23 @@
           </p>
         </div>
 
-        <!-- Side-by-Side Comparison -->
-        <div class="maint-compare-grid reveal">
-
-          <div class="maint-box maint-box-us">
-            <span class="maint-box-tag">CONTINUOUS LIFETIME PARTNERSHIP &bull; 100&percnt; INCLUDED</span>
-            <h3 class="maint-box-title">Solve Seeds Continuous Maintenance</h3>
-            <p class="maint-box-desc">
-              Your platform is maintained by the same senior engineers who built it. <strong>Every future feature, database update, API change, and UI improvement is 100&percnt; included.</strong>
-            </p>
-            <div class="maint-points">
-              <div class="maint-point">
-                <span class="maint-point-dash">&mdash;</span>
-                <span><strong>Unlimited Customizations:</strong> Request new features, reports, or workflow tweaks anytime with zero extra hourly fees.</span>
-              </div>
-              <div class="maint-point">
-                <span class="maint-point-dash">&mdash;</span>
-                <span><strong>Proactive Security &amp; Updates:</strong> Regular vulnerability checks, security updates, and performance tuning so your platform stays fast and secure.</span>
-              </div>
-              <div class="maint-point">
-                <span class="maint-point-dash">&mdash;</span>
-                <span><strong>Direct Architect Access:</strong> Chat directly with your lead architect over Slack or Microsoft Teams. No junior account managers.</span>
-              </div>
-              <div class="maint-point">
-                <span class="maint-point-dash">&mdash;</span>
-                <span><strong>Scales Without Rebuilding:</strong> We manage server optimization, database indexes, and caching as your active user base grows.</span>
-              </div>
-            </div>
+        <!-- 3 High-Impact SLA Metrics -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px; margin-bottom:32px;" class="reveal">
+          <div style="background:var(--surface); border:1px solid var(--rule); border-radius:var(--r-sm); padding:24px; text-align:center;">
+            <div style="font-size:2rem; font-weight:700; color:var(--color-success); font-family:var(--font-sans); margin-bottom:4px;">100&percnt;</div>
+            <div style="font-weight:600; color:var(--ink); margin-bottom:4px;">All Customizations Included</div>
+            <div style="font-size:0.84rem; color:var(--ink-secondary);">Every UI tweak, report, and new form is covered with zero hourly fees.</div>
           </div>
-
-          <div class="maint-box maint-box-them">
-            <span class="maint-box-tag">THE INDUSTRY FLAW &bull; WHAT BREAKS BUSINESSES</span>
-            <h3 class="maint-box-title">The One-Off Freelance Trap</h3>
-            <p class="maint-box-desc">
-              Freelancers and legacy agencies treat projects as one-time transactions. Once the final invoice is paid, you are left on your own:
-            </p>
-            <div class="maint-points">
-              <div class="maint-point">
-                <span class="maint-point-dash">&mdash;</span>
-                <span><strong>Disappearing Freelancers:</strong> Contractors move on to new projects or jobs, leaving you with nobody to fix emergency bugs.</span>
-              </div>
-              <div class="maint-point">
-                <span class="maint-point-dash">&mdash;</span>
-                <span><strong>Expensive Change Orders:</strong> Agencies charge high hourly rates even for minor text or layout changes.</span>
-              </div>
-              <div class="maint-point">
-                <span class="maint-point-dash">&mdash;</span>
-                <span><strong>Outdated Code:</strong> Without ongoing maintenance, third-party APIs change, databases slow down, and security risks appear.</span>
-              </div>
-              <div class="maint-point">
-                <span class="maint-point-dash">&mdash;</span>
-                <span><strong>Wrong Incentives:</strong> Freelancers want to finish as fast as possible and leave; your business needs durable, evolving software.</span>
-              </div>
-            </div>
+          <div style="background:var(--surface); border:1px solid var(--rule); border-radius:var(--r-sm); padding:24px; text-align:center;">
+            <div style="font-size:2rem; font-weight:700; color:var(--accent); font-family:var(--font-sans); margin-bottom:4px;">15 Min</div>
+            <div style="font-weight:600; color:var(--ink); margin-bottom:4px;">Critical Incident Response</div>
+            <div style="font-size:0.84rem; color:var(--ink-secondary);">24/7 automated database failover, edge monitoring, and daily backups.</div>
           </div>
-
+          <div style="background:var(--surface); border:1px solid var(--rule); border-radius:var(--r-sm); padding:24px; text-align:center;">
+            <div style="font-size:2rem; font-weight:700; color:var(--ink); font-family:var(--font-sans); margin-bottom:4px;">Direct Pod</div>
+            <div style="font-weight:600; color:var(--ink); margin-bottom:4px;">Principal Architects on Slack</div>
+            <div style="font-size:0.84rem; color:var(--ink-secondary);">Direct daily communication with senior systems engineers. No middlemen.</div>
+          </div>
         </div>
 
         <!-- 4 Maintenance Pillars -->
@@ -1106,96 +1028,108 @@
     <section class="section section-alt" id="suite">
       <div class="container">
         <div class="section-head reveal">
-          <span class="section-tag">04 &mdash; MODULAR ENTERPRISE SUITE</span>
-          <h2 class="section-title">Pre-engineered building blocks. Pick what you need, customized for your business.</h2>
+          <span class="section-tag">04 &mdash; ENTERPRISE APP ECOSYSTEM</span>
+          <h2 class="section-title">Modular Building Blocks. Seamlessly Connected.</h2>
           <p class="section-desc">
-            Just like Rippling and Odoo, we use modular building blocks to eliminate repetitive work. Each module is fully customized to your exact requirements and snaps seamlessly into your platform during initial launch and ongoing maintenance.
+            Like Odoo and Zoho One, our pre-engineered modules snap directly into your core database. Fully customized to your workflow with zero license fees.
           </p>
         </div>
 
-        <div class="cards-3 reveal-group">
+        <div class="enterprise-apps-grid reveal-group">
 
-          <div class="suite-card">
-            <div class="suite-card-top">
-              <span class="suite-num">MODULE 01</span>
-              <span class="suite-cat">COMMERCE</span>
+          <!-- App 01: Commerce -->
+          <div class="app-suite-card">
+            <div class="app-suite-header">
+              <div class="app-suite-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </div>
+              <span class="app-suite-pill">LIVE SYNC</span>
             </div>
-            <h3 class="suite-title">Omnichannel Commerce &amp; POS</h3>
-            <p class="suite-desc">High-speed product catalog, real-time cart sync, offline-ready POS, barcode scanning, multi-currency pricing, and automated tax calculations.</p>
-            <div class="suite-specs">
-              <span class="spec-badge">Instant Cart Sync</span>
-              <span class="spec-badge">Offline POS Mode</span>
-              <span class="spec-badge">ONDC Ready</span>
+            <h3 class="app-suite-title">Omnichannel Commerce &amp; POS</h3>
+            <p class="app-suite-desc">Fast catalog browsing, real-time cart sync across devices, offline-ready POS, and automated multi-currency tax calculation.</p>
+            <div class="app-suite-footer">
+              <span>ONDC &bull; Barcode Sync</span>
+              <span style="color:var(--color-success);">&check; Instant Connect</span>
             </div>
           </div>
 
-          <div class="suite-card">
-            <div class="suite-card-top">
-              <span class="suite-num">MODULE 02</span>
-              <span class="suite-cat">SUPPLY CHAIN</span>
+          <!-- App 02: Inventory -->
+          <div class="app-suite-card">
+            <div class="app-suite-header">
+              <div class="app-suite-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+              </div>
+              <span class="app-suite-pill">MULTI-HUB</span>
             </div>
-            <h3 class="suite-title">Multi-Location Inventory</h3>
-            <p class="suite-desc">Accurate stock tracking across warehouses, batch transfers, low-stock alerts, supplier purchase orders, and barcode tracking.</p>
-            <div class="suite-specs">
-              <span class="spec-badge">Double-Entry Stock</span>
-              <span class="spec-badge">Multi-Warehouse</span>
-              <span class="spec-badge">Auto PO Orders</span>
-            </div>
-          </div>
-
-          <div class="suite-card">
-            <div class="suite-card-top">
-              <span class="suite-num">MODULE 03</span>
-              <span class="suite-cat">FINTECH</span>
-            </div>
-            <h3 class="suite-title">UPI Autopay &amp; Split Escrow</h3>
-            <p class="suite-desc">Recurring UPI Autopay subscriptions, marketplace split settlements, automated vendor payouts, and tax withholding.</p>
-            <div class="suite-specs">
-              <span class="spec-badge">UPI 2.0 Autopay</span>
-              <span class="spec-badge">Escrow Payouts</span>
-              <span class="spec-badge">Instant Webhooks</span>
+            <h3 class="app-suite-title">Multi-Location Inventory</h3>
+            <p class="app-suite-desc">Double-entry stock accounting, automated batch tracking, supplier purchase orders, and low-inventory reorder alerts.</p>
+            <div class="app-suite-footer">
+              <span>Batch Transfers &bull; Low Stock</span>
+              <span style="color:var(--color-success);">&check; Instant Connect</span>
             </div>
           </div>
 
-          <div class="suite-card">
-            <div class="suite-card-top">
-              <span class="suite-num">MODULE 04</span>
-              <span class="suite-cat">IDENTITY</span>
+          <!-- App 03: Fintech -->
+          <div class="app-suite-card">
+            <div class="app-suite-header">
+              <div class="app-suite-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+              </div>
+              <span class="app-suite-pill">UPI 2.0</span>
             </div>
-            <h3 class="suite-title">Team Workspaces &amp; Roles</h3>
-            <p class="suite-desc">Role-based permissions, team member invitations, audit trails, single sign-on (SSO), and custom domain setup with automated SSL.</p>
-            <div class="suite-specs">
-              <span class="spec-badge">Private Customer Data</span>
-              <span class="spec-badge">Custom Domain SSL</span>
-              <span class="spec-badge">Enterprise SSO</span>
-            </div>
-          </div>
-
-          <div class="suite-card">
-            <div class="suite-card-top">
-              <span class="suite-num">MODULE 05</span>
-              <span class="suite-cat">DATA PIPELINES</span>
-            </div>
-            <h3 class="suite-title">Real-Time Data &amp; Analytics</h3>
-            <p class="suite-desc">Live activity dashboards, fast background worker queues, high-speed Redis caching, and real-time revenue reporting.</p>
-            <div class="suite-specs">
-              <span class="spec-badge">Fast Queue Workers</span>
-              <span class="spec-badge">In-Memory Caching</span>
-              <span class="spec-badge">Live Dashboard Feeds</span>
+            <h3 class="app-suite-title">UPI Autopay &amp; Settlements</h3>
+            <p class="app-suite-desc">Automated recurring billing mandates, marketplace escrow splits, instant vendor disbursements, and bank webhook replay.</p>
+            <div class="app-suite-footer">
+              <span>NPCI AutoPay &bull; Escrow</span>
+              <span style="color:var(--color-success);">&check; Instant Connect</span>
             </div>
           </div>
 
-          <div class="suite-card">
-            <div class="suite-card-top">
-              <span class="suite-num">MODULE 06</span>
-              <span class="suite-cat">COMPLIANCE</span>
+          <!-- App 04: Identity & Auth -->
+          <div class="app-suite-card">
+            <div class="app-suite-header">
+              <div class="app-suite-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <span class="app-suite-pill">ENTERPRISE</span>
             </div>
-            <h3 class="suite-title">Indian Compliance &amp; GST IRN</h3>
-            <p class="suite-desc">Automated B2B GST e-invoices with IRN QR codes, complete audit trails, and strict data residency under India&rsquo;s DPDP Act 2023.</p>
-            <div class="suite-specs">
-              <span class="spec-badge">DPDP Act 2023</span>
-              <span class="spec-badge">GSTN B2B IRN</span>
-              <span class="spec-badge">Tamper-Proof Audit</span>
+            <h3 class="app-suite-title">Team Workspaces &amp; RLS Auth</h3>
+            <p class="app-suite-desc">Strict Postgres row-level security, granular role permissions, cryptographic JWT vault, team invitations, and audit logging.</p>
+            <div class="app-suite-footer">
+              <span>SAML SSO &bull; Audit Trail</span>
+              <span style="color:var(--color-success);">&check; Instant Connect</span>
+            </div>
+          </div>
+
+          <!-- App 05: Analytics -->
+          <div class="app-suite-card">
+            <div class="app-suite-header">
+              <div class="app-suite-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+              </div>
+              <span class="app-suite-pill">&lt;25MS EDGE</span>
+            </div>
+            <h3 class="app-suite-title">Real-Time Data &amp; Telemetry</h3>
+            <p class="app-suite-desc">Live streaming metric dashboards, high-throughput BullMQ queues, in-memory Redis caching, and real-time ARR analytics.</p>
+            <div class="app-suite-footer">
+              <span>Redis &bull; 10k ops/sec</span>
+              <span style="color:var(--color-success);">&check; Instant Connect</span>
+            </div>
+          </div>
+
+          <!-- App 06: Compliance -->
+          <div class="app-suite-card">
+            <div class="app-suite-header">
+              <div class="app-suite-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+              <span class="app-suite-pill">DPDP 2023</span>
+            </div>
+            <h3 class="app-suite-title">GST E-Invoicing &amp; Compliance</h3>
+            <p class="app-suite-desc">Automated B2B GST e-invoices with signed QR codes, IRN generation, tamper-proof logs, and Indian data localization.</p>
+            <div class="app-suite-footer">
+              <span>GSTN IRN &bull; RBI Compliant</span>
+              <span style="color:var(--color-success);">&check; Instant Connect</span>
             </div>
           </div>
 
@@ -1218,55 +1152,43 @@
           </p>
         </div>
 
-        <div class="tco-wrap reveal">
-          <table class="tco-table">
-            <thead>
-              <tr>
-                <th style="width:24%;">Strategic Dimension</th>
-                <th style="width:28%;" class="tco-col-us">Solve Seeds Technologies</th>
-                <th style="width:24%;">In-House Engineering Team</th>
-                <th style="width:24%;">Legacy IT Dev Agency</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Delivery to Production</strong></td>
-                <td class="tco-col-us"><span class="tco-tag-green">5&ndash;7 Days (MVP) &bull; 10&ndash;14 Days (Full SaaS)</span></td>
-                <td>3 to 6 months hiring delay &amp; onboarding</td>
-                <td>4 to 9 months slow committee management</td>
-              </tr>
-              <tr>
-                <td><strong>Future Customizations</strong></td>
-                <td class="tco-col-us"><span class="tco-tag-green">100&percnt; Included in Maintenance &bull; Zero Extra Fees</span></td>
-                <td>Limited to existing team bandwidth</td>
-                <td>&dollar;150/hr change orders with 3-week delays</td>
-              </tr>
-              <tr>
-                <td><strong>Code &amp; IP Ownership</strong></td>
-                <td class="tco-col-us"><span class="tco-tag-green">100&percnt; Client Owned (Full Git Transfer)</span></td>
-                <td>Complex internal employment agreements</td>
-                <td>Proprietary templates with vendor lock-in</td>
-              </tr>
-              <tr>
-                <td><strong>Engineering Team</strong></td>
-                <td class="tco-col-us"><span class="tco-tag-green">Assigned Senior Principal Architects</span></td>
-                <td>High recruiter fees &amp; engineer churn</td>
-                <td>Delegated to junior interns</td>
-              </tr>
-              <tr>
-                <td><strong>Cost Structure</strong></td>
-                <td class="tco-col-us"><span class="tco-tag-green">Fixed Scope-Based Investment</span></td>
-                <td>&dollar;150k&ndash;&dollar;250k / year salaries + benefits</td>
-                <td>Bloated retainers + constant extra invoices</td>
-              </tr>
-              <tr>
-                <td><strong>Digital India DPI</strong></td>
-                <td class="tco-col-us"><span class="tco-tag-green">Native UPI 2.0 Autopay, GST IRN &amp; DPDP 2023</span></td>
-                <td>Built from scratch at your expense</td>
-                <td>Generic US templates without Indian rails</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="cards-2 reveal-group" style="margin-top:32px;">
+          <!-- Plan 1: MVP -->
+          <div class="app-suite-card" style="padding:32px;">
+            <div class="app-suite-header">
+              <span class="app-suite-pill" style="background:#F2E8D2; color:var(--ink);">5&ndash;7 DAYS DELIVERY</span>
+              <span style="font-size:11px; font-weight:600; color:var(--ink-secondary); text-transform:uppercase;">RAPID LAUNCH</span>
+            </div>
+            <h3 style="font-family:var(--font-serif); font-size:1.8rem; margin:12px 0 6px;">Sovereign MVP Sprint</h3>
+            <p style="color:var(--ink-secondary); font-size:0.92rem; margin:0 0 20px;">For venture founders and scale-ups needing a working, validated platform live in front of customers immediately.</p>
+            <ul style="list-style:none; padding:0; margin:0 0 24px; display:flex; flex-direction:column; gap:10px; font-size:0.88rem; color:var(--ink);">
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> Production-grade single/multi-tenant Postgres database</li>
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> Cryptographic JWT authentication &amp; team user roles</li>
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> Core customer workflows &amp; responsive web interface</li>
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> 100&percnt; Full Git Repository handover with documentation</li>
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> 30-Day post-launch warranty &amp; Indian edge deployment</li>
+            </ul>
+            <a href="#intake" class="btn btn-outline" style="width:100%; text-align:center;">Initiate MVP Consultation &rarr;</a>
+          </div>
+
+          <!-- Plan 2: Enterprise -->
+          <div class="app-suite-card" style="padding:32px; border:2px solid var(--accent); background:#FFFDF7; position:relative;">
+            <div style="position:absolute; top:-12px; right:24px; background:var(--accent); color:#FFF; font-size:10px; font-weight:700; letter-spacing:0.08em; padding:3px 10px; border-radius:12px;">ENTERPRISE FLAGSHIP</div>
+            <div class="app-suite-header">
+              <span class="app-suite-pill" style="background:var(--accent); color:#FFF;">10&ndash;14 DAYS DELIVERY</span>
+              <span style="font-size:11px; font-weight:600; color:var(--color-success); text-transform:uppercase;">LIFETIME INCLUDED</span>
+            </div>
+            <h3 style="font-family:var(--font-serif); font-size:1.8rem; margin:12px 0 6px;">Full SaaS Platform</h3>
+            <p style="color:var(--ink-secondary); font-size:0.92rem; margin:0 0 20px;">Complete sovereign enterprise suite with automated billing, integrations, and continuous lifetime maintenance included.</p>
+            <ul style="list-style:none; padding:0; margin:0 0 24px; display:flex; flex-direction:column; gap:10px; font-size:0.88rem; color:var(--ink);">
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> Everything in MVP Sprint + Multi-role workspaces</li>
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> UPI 2.0 Recurring Autopay, Stripe &amp; automated GST e-invoices</li>
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> High-throughput BullMQ background queues &amp; Redis cache</li>
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> <strong>Lifetime Maintenance OS:</strong> All future customizations 100&percnt; free</li>
+              <li><span style="color:var(--color-success); font-weight:bold; margin-right:8px;">&check;</span> Direct Senior Principal Architect access (Slack / Teams)</li>
+            </ul>
+            <a href="#intake" class="btn btn-dark" style="width:100%; text-align:center;">Initiate Enterprise Architecture &rarr;</a>
+          </div>
         </div>
       </div>
     </section>
@@ -1563,6 +1485,7 @@
     </div>
   </footer>
 
+  <script src="js/neon-auth.js"></script>
   <script src="js/main.js"></script>
   <script src="js/neon-assistant.js"></script>
 </body>

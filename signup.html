@@ -21,14 +21,26 @@
       font-family: var(--font-sans);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      padding: 32px 16px;
+      padding: 80px 16px 32px;
     }
   </style>
 </head>
 <body>
+
+  <!-- Website Header Navigation -->
+  <header class="auth-site-header">
+    <div class="auth-site-header-inner">
+      <a href="index.html" class="brand" title="Solve Seeds Technologies">
+        <div class="brand-icon">SS</div>
+        <span class="brand-name">Solve Seeds</span>
+      </a>
+      <a href="index.html" class="btn btn-outline btn-sm">&larr; Back to Website</a>
+    </div>
+  </header>
 
   <main class="auth-card-claude" role="main">
     <!-- 1. Small "SS" mark, centered, 32px -->
@@ -44,7 +56,12 @@
     <form id="signupForm" onsubmit="handleSignupSubmit(event)" novalidate>
       <div style="display:flex; flex-direction:column; gap:16px;">
         <div>
-          <label class="field-label" for="signupEmail">Email</label>
+          <label class="field-label" for="signupName">Full Name</label>
+          <input type="text" id="signupName" class="field-input" placeholder="e.g. Siddharth Mehta" autocomplete="name">
+        </div>
+
+        <div>
+          <label class="field-label" for="signupEmail">Work Email</label>
           <input type="email" id="signupEmail" class="field-input" placeholder="name@company.com" required autocomplete="email">
           <div id="emailError" class="field-inline-error" style="display:none;"></div>
         </div>
@@ -52,7 +69,7 @@
         <div>
           <label class="field-label" for="signupPassword">Password</label>
           <div class="password-field-wrap">
-            <input type="password" id="signupPassword" class="field-input" placeholder="••••••••••••" required autocomplete="new-password" oninput="updatePasswordStrength(this.value)">
+            <input type="password" id="signupPassword" class="field-input" placeholder="At least 6 characters" required autocomplete="new-password" oninput="updatePasswordStrength(this.value)">
             <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('signupPassword', this)">Show</button>
           </div>
           <!-- Subtle 2px password strength bar under field -->
@@ -65,7 +82,7 @@
         <div>
           <label class="field-label" for="signupConfirmPassword">Confirm password</label>
           <div class="password-field-wrap">
-            <input type="password" id="signupConfirmPassword" class="field-input" placeholder="••••••••••••" required autocomplete="new-password">
+            <input type="password" id="signupConfirmPassword" class="field-input" placeholder="Repeat password" required autocomplete="new-password">
             <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('signupConfirmPassword', this)">Show</button>
           </div>
           <div id="confirmError" class="field-inline-error" style="display:none;"></div>
@@ -90,6 +107,7 @@
     </div>
   </main>
 
+  <script src="js/neon-auth.js"></script>
   <script>
     function togglePasswordVisibility(inputId, btn) {
       const input = document.getElementById(inputId);
@@ -111,22 +129,33 @@
         return;
       }
       let score = 0;
-      if (val.length >= 10) score += 40;
-      if (/[A-Za-z]/.test(val)) score += 30;
-      if (/[0-9]/.test(val)) score += 30;
+      if (val.length >= 6) score += 30;
+      if (val.length >= 10) score += 20;
+      if (/[A-Za-z]/.test(val)) score += 25;
+      if (/[0-9]/.test(val)) score += 25;
 
       fill.style.width = score + '%';
-      if (score < 60) {
+      if (score < 50) {
         fill.style.backgroundColor = 'var(--color-danger)';
-      } else if (score < 100) {
+      } else if (score < 80) {
         fill.style.backgroundColor = 'var(--color-warn)';
       } else {
         fill.style.backgroundColor = 'var(--color-success)';
       }
     }
 
+    function formatNameFromEmail(email) {
+      const localPart = (email || '').split('@')[0];
+      return localPart
+        .split(/[._-]/)
+        .filter(Boolean)
+        .map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
+        .join(' ') || 'Client';
+    }
+
     async function handleSignupSubmit(e) {
       e.preventDefault();
+      const nameInput = document.getElementById('signupName');
       const emailInput = document.getElementById('signupEmail');
       const pwdInput = document.getElementById('signupPassword');
       const confirmInput = document.getElementById('signupConfirmPassword');
@@ -141,9 +170,11 @@
       pwdErr.style.display = 'none';
       confirmErr.style.display = 'none';
 
-      const email = (emailInput.value || '').trim();
+      const email = (emailInput.value || '').trim().toLowerCase();
       const password = pwdInput.value || '';
       const confirm = confirmInput.value || '';
+      const rawName = (nameInput ? nameInput.value : '').trim();
+      const clientName = rawName || formatNameFromEmail(email);
 
       let hasErr = false;
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -174,28 +205,30 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Creating Account…';
 
-      // Always authenticate immediately
-      const clientId = 'SST-CORP-' + Math.floor(1000 + Math.random() * 9000);
-      sessionStorage.setItem('sst_client_id', clientId);
-      sessionStorage.setItem('sst_client_name', email.split('@')[0]);
-      localStorage.setItem('sst_client_email', email);
-
       try {
-        const users = JSON.parse(localStorage.getItem('sst_registered_users') || '[]');
-        users.push({ email, clientId, name: email.split('@')[0] });
-        localStorage.setItem('sst_registered_users', JSON.stringify(users));
-      } catch (err) {}
-
-      // Background sync to server API
-      try {
-        await fetch('/api/auth/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, confirmPassword: confirm })
+        const result = await neonAuth.signUp({
+          email,
+          password,
+          name: clientName
         });
-      } catch (e) {}
 
-      window.location.href = 'portal.html';
+        if (result && result.ok) {
+          submitBtn.textContent = 'Account Created! Redirecting…';
+          setTimeout(() => {
+            window.location.href = 'portal.html';
+          }, 350);
+        } else {
+          inlineErr.textContent = (result && result.error) || 'Account creation failed. Please try again.';
+          inlineErr.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Account';
+        }
+      } catch (err) {
+        inlineErr.textContent = 'Authentication service encountered an unexpected error.';
+        inlineErr.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Account';
+      }
     }
   </script>
 </body>

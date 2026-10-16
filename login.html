@@ -21,14 +21,26 @@
       font-family: var(--font-sans);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      padding: 32px 16px;
+      padding: 80px 16px 32px;
     }
   </style>
 </head>
 <body>
+
+  <!-- Website Header Navigation -->
+  <header class="auth-site-header">
+    <div class="auth-site-header-inner">
+      <a href="index.html" class="brand" title="Solve Seeds Technologies">
+        <div class="brand-icon">SS</div>
+        <span class="brand-name">Solve Seeds</span>
+      </a>
+      <a href="index.html" class="btn btn-outline btn-sm">&larr; Back to Website</a>
+    </div>
+  </header>
 
   <main class="auth-card-claude" role="main">
     <!-- 1. Small "SS" mark, centered, 32px -->
@@ -82,6 +94,7 @@
     </div>
   </main>
 
+  <script src="js/neon-auth.js"></script>
   <script>
     function togglePasswordVisibility(inputId, btn) {
       const input = document.getElementById(inputId);
@@ -108,7 +121,7 @@
       emailErr.style.display = 'none';
       pwdErr.style.display = 'none';
 
-      const email = (emailInput.value || '').trim();
+      const email = (emailInput.value || '').trim().toLowerCase();
       const password = pwdInput.value || '';
 
       let hasErr = false;
@@ -134,46 +147,25 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Signing In…';
 
-      let clientId = 'SST-CORP-4091';
-      let clientName = email.split('@')[0];
       try {
-        const users = JSON.parse(localStorage.getItem('sst_registered_users') || '[]');
-        const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-        if (found) {
-          clientId = found.clientId || clientId;
-          clientName = found.name || clientName;
-        }
-      } catch (err) {}
-
-      try {
-        const resp = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await resp.json().catch(() => ({}));
-
-        if (resp.ok && data.ok) {
-          sessionStorage.setItem('sst_client_id', data.user?.clientId || clientId);
-          sessionStorage.setItem('sst_client_name', data.user?.name || clientName);
-          localStorage.setItem('sst_client_email', email);
-          window.location.href = 'portal.html';
-          return;
-        } else if (resp.status === 401 && !localStorage.getItem('sst_registered_users')) {
-          inlineErr.textContent = data.error || 'Invalid credentials.';
+        const result = await neonAuth.signIn({ email, password });
+        if (result && result.ok) {
+          submitBtn.textContent = 'Welcome! Redirecting…';
+          setTimeout(() => {
+            window.location.href = 'portal.html';
+          }, 350);
+        } else {
+          inlineErr.textContent = (result && result.error) || 'Invalid email or password.';
           inlineErr.style.display = 'block';
           submitBtn.disabled = false;
           submitBtn.textContent = 'Sign In';
-          return;
         }
       } catch (err) {
-        // Fallback for static client testing
+        inlineErr.textContent = 'Authentication service encountered an unexpected error.';
+        inlineErr.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign In';
       }
-
-      sessionStorage.setItem('sst_client_id', clientId);
-      sessionStorage.setItem('sst_client_name', clientName);
-      localStorage.setItem('sst_client_email', email);
-      window.location.href = 'portal.html';
     }
   </script>
 </body>

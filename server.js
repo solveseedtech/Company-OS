@@ -13,6 +13,8 @@ const ROOT_DIR = __dirname;
 
 // Destination email lives ONLY in server-side variable — never sent to client
 const SOLVESEEDS_CONTACT_EMAIL = process.env.SOLVESEEDS_CONTACT_EMAIL || 'solveseedtech@gmail.com';
+const NEON_AUTH_BASE_URL = process.env.NEON_AUTH_BASE_URL || 'https://ep-soft-art-b4n8mzvd.neonauth.c-6.us-east-2.aws.neon.tech/neondb/auth';
+const NEON_AUTH_JWKS_URL = process.env.NEON_AUTH_JWKS_URL || 'https://ep-soft-art-b4n8mzvd.neonauth.c-6.us-east-2.aws.neon.tech/neondb/auth/.well-known/jwks.json';
 
 // In-memory rate limiting stores
 // Rate limit: 5 messages per user per hour for contact
@@ -170,6 +172,51 @@ Dispatched from Solve Seeds Sovereign Portal
     }
   }
 
+// Persistent User Store Helpers
+const USERS_FILE = path.join(ROOT_DIR, 'data', 'users.json');
+
+function loadUsers() {
+  try {
+    if (fs.existsSync(USERS_FILE)) {
+      const data = fs.readFileSync(USERS_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (err) {
+    console.error('Failed to load users:', err);
+  }
+  return [];
+}
+
+function saveUsers(users) {
+  try {
+    const dataDir = path.join(ROOT_DIR, 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Failed to save users:', err);
+  }
+}
+
+function formatNameFromEmail(email) {
+  const localPart = (email || '').split('@')[0];
+  return localPart
+    .split(/[._-]/)
+    .filter(Boolean)
+    .map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
+    .join(' ') || 'Client';
+}
+
+  // ── API: Auth Configuration (/api/auth/config) ──
+  if (pathname === '/api/auth/config' && (req.method === 'GET' || req.method === 'OPTIONS')) {
+    return sendJson(res, 200, {
+      ok: true,
+      authUrl: NEON_AUTH_BASE_URL,
+      jwksUrl: NEON_AUTH_JWKS_URL
+    });
+  }
+
   // ── API: Auth Login (/api/auth/login) ──
   if (pathname === '/api/auth/login' && req.method === 'POST') {
     try {
@@ -178,7 +225,7 @@ Dispatched from Solve Seeds Sovereign Portal
       const password = data.password || '';
 
       const authKey = `${clientIp}_${email}`;
-      if (!checkRateLimit(authRateLimits, authKey, 5, 15 * 60 * 1000)) {
+      if (!checkRateLimit(authRateLimits, authKey, 10, 15 * 60 * 1000)) {
         return sendJson(res, 429, {
           ok: false,
           error: 'Too many login attempts. Please wait 15 minutes before trying again.'
@@ -192,21 +239,30 @@ Dispatched from Solve Seeds Sovereign Portal
         });
       }
 
-      if (password.length < 10 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
-        return sendJson(res, 400, {
+      const users = loadUsers();
+      const user = users.find(u => u.email && u.email.toLowerCase() === email);
+
+      if (!user) {
+        return sendJson(res, 401, {
           ok: false,
-          error: 'Password must be at least 10 characters and contain a letter and a number.'
+          error: 'No account found with this email. Please check your email or sign up.'
         });
       }
 
-      // Valid client credentials verification
+      if (user.password !== password) {
+        return sendJson(res, 401, {
+          ok: false,
+          error: 'Incorrect password. Please try again.'
+        });
+      }
+
       return sendJson(res, 200, {
         ok: true,
         user: {
-          clientId: 'SST-CORP-4091',
-          name: 'Siddharth M.',
-          email: email,
-          role: 'Client CTO'
+          clientId: user.clientId || 'SST-CORP-4091',
+          name: user.name || formatNameFromEmail(email),
+          email: user.email,
+          role: user.role || 'Client Enterprise'
         },
         redirect: '/portal'
       });
@@ -224,21 +280,22 @@ Dispatched from Solve Seeds Sovereign Portal
       const confirmPassword = data.confirmPassword || '';
 
       const authKey = `${clientIp}_${email}`;
-      if (!checkRateLimit(authRateLimits, authKey, 5, 15 * 60 * 1000)) {
+      if (!checkRateLimit(authRateLimits, authKey, 10, 15 * 60 * 1000)) {
         return sendJson(res, 429, {
           ok: false,
           error: 'Too many signup attempts. Please wait 15 minutes.'
         });
       }
 
-      if (!email || !password) {
-        return sendJson(res, 400, { ok: false, error: 'All fields are required.' });
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        return sendJson(res, 400, { ok: false, error: 'Please enter a valid email address.' });
       }
 
-      if (password.length < 10 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+      if (!password || password.length < 6) {
         return sendJson(res, 400, {
           ok: false,
-          error: 'Password must be at least 10 characters and contain a letter and a number.'
+          error: 'Password must be at least 6 characters.'
         });
       }
 
@@ -246,9 +303,39 @@ Dispatched from Solve Seeds Sovereign Portal
         return sendJson(res, 400, { ok: false, error: 'Passwords do not match.' });
       }
 
+      const users = loadUsers();
+      const existing = users.find(u => u.email && u.email.toLowerCase() === email);
+      if (existing) {
+        return sendJson(res, 409, {
+          ok: false,
+          error: 'An account with this email already exists. Please sign in.'
+        });
+      }
+
+      const clientId = 'SST-CORP-' + Math.floor(1000 + Math.random() * 9000);
+      const name = (data.name || '').trim() || formatNameFromEmail(email);
+
+      const newUser = {
+        email: email,
+        password: password,
+        name: name,
+        clientId: clientId,
+        role: 'Client Enterprise',
+        createdAt: new Date().toISOString()
+      };
+
+      users.push(newUser);
+      saveUsers(users);
+
       return sendJson(res, 200, {
         ok: true,
         message: 'Account created successfully.',
+        user: {
+          clientId: newUser.clientId,
+          name: newUser.name,
+          email: newUser.email,
+          role: newUser.role
+        },
         redirect: '/portal'
       });
     } catch (err) {
@@ -292,6 +379,10 @@ Dispatched from Solve Seeds Sovereign Portal
   }
 
   const safeRelPath = targetFile.replace(/^\/+/, '');
+  if (safeRelPath.startsWith('data/') || safeRelPath === 'data' || safeRelPath.startsWith('data\\')) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    return res.end('403 Forbidden');
+  }
   const filePath = path.join(ROOT_DIR, safeRelPath);
 
   // Check if file exists
